@@ -1,6 +1,6 @@
 # Design and implement build and release pipelines
 
-## Design and implement build and release pipelines
+## Design and implement pipelines
 
 ### Select a deployment automation solution, including GitHub Actions and Azure Pipelines
 
@@ -430,3 +430,378 @@ are not simply two spellings of the same mechanism.
 - Dependencies should reflect real dependencies: unnecessary serialization slows pipelines.
 - Central templates reduce YAML duplication and configuration drift.
 - A deployment condition should usually include success logic too, not just environment == prod.
+
+### Design and implement a strategy for job execution order, including parallelism and multi-stage pipelines
+The key rule in GitHub Actions is:
+
+Jobs run in parallel by default unless you create dependencies with needs:.
+
+So this:
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+
+  security-scan:
+    runs-on: ubuntu-latest
+
+means:
+
+unit-tests ──────►
+                  running in parallel
+security-scan ──►
+
+But:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+
+means:
+
+Build
+  ↓
+Test
+
+And needs can contain several jobs, which lets you create a fan-out/fan-in graph:
+
+             ┌→ Unit Tests ──────┐
+Build ───────┤                    ├→ Deploy
+             └→ Security Scan ───┘
+deploy:
+  needs:
+    - unit-tests
+    - security-scan
+
+By default, if a required upstream job fails or is skipped, jobs depending on it are skipped too. GitHub supports conditions such as always() when a downstream job must still execute, for example cleanup/reporting.
+
+Multi-stage pipelines?
+
+GitHub Actions doesn't use Azure Pipelines' explicit stage: hierarchy in the same way. You usually model lifecycle phases using jobs + needs + environments.
+
+Conceptually:
+
+Azure Pipelines             GitHub Actions
+
+Stage: Build                Job: build
+Stage: Test                 Job: test
+Stage: Deploy               Job: deploy
+                            environment: production
+
+Matrix parallelism
+
+This is a useful new concept.
+
+Suppose a Python library must work with:
+
+Python 3.10
+Python 3.11
+Python 3.12
+Python 3.13
+
+Instead of manually defining four jobs, GitHub Actions can use a matrix strategy. GitHub creates a job for each matrix combination and runs them in parallel subject to runner availability.
+
+Conceptually:
+
+                  ┌→ Python 3.10
+                  ├→ Python 3.11
+Test matrix ──────┼→ Python 3.12
+                  └→ Python 3.13
+
+That's particularly useful for cross-platform or multi-runtime testing.
+
+- Jobs run in parallel by default.
+needs: creates explicit dependencies.
+- Multiple independent jobs should run in parallel where possible.
+- A downstream job can depend on multiple upstream jobs.
+- A matrix creates parallel job executions for combinations such as OS/runtime versions.
+needs: test waits for the entire test matrix.
+- GitHub Actions usually models multi-stage flows with jobs + dependencies + environments, rather than Azure Pipelines-style explicit stage: blocks.
+- YAML order does not define GitHub job execution order.
+- Separate jobs do not share a filesystem automatically.
+- Don't serialize jobs that have no real dependency.
+- Matrix combinations multiply: 2 OS × 2 Python = 4 runs.
+- If one required matrix execution fails, downstream deployment is normally skipped.
+- Use fan-out/fan-in to increase validation speed while still gating deployment on all required checks.
+
+
+### Develop and implement complex pipeline scenarios, such as hybrid pipelines, VM templates, and self-hosted runners or agents
+A complex pipeline often doesn't use one execution model everywhere. Different jobs have different requirements:
+
+                 ┌→ Hosted agent → Build
+GitHub/Azure ────┤
+                 └→ Self-hosted agent → Private integration test
+                                           ↓
+                                    Production deployment
+
+That's a hybrid pipeline: different execution environments participate in one delivery flow.
+
+Why hybrid?
+
+Imagine:
+
+Build
+→ standard Python/.NET tooling
+→ no private connectivity
+
+Integration Test
+→ must access private SQL database
+
+Deploy
+→ must access internal production endpoint
+
+Putting everything on self-hosted agents would work, but you'd take on unnecessary infrastructure maintenance for Build.
+
+Putting everything on Microsoft-hosted agents may not work because the private resources aren't reachable.
+
+A stronger design could therefore be:
+
+Microsoft-hosted
+Build + unit tests
+        ↓
+Artifact
+        ↓
+Self-hosted
+Integration tests
+        ↓
+Self-hosted / controlled deployment
+
+This follows a useful principle:
+
+Use specialized infrastructure only where the workload actually requires it.
+
+VM templates / images
+
+You've already seen the configuration-drift problem:
+
+Agent A → Python 3.11
+Agent B → Python 3.12
+Agent C → Python 3.13
+
+Manually creating self-hosted agents doesn't scale well.
+
+Instead, define a repeatable machine baseline:
+
+Version-controlled definition
+├── OS
+├── required tools
+├── agent prerequisites
+├── security configuration
+└── versions
+        ↓
+Build VM/image
+        ↓
+Create agents consistently
+
+Depending on the architecture, this might involve VM images, image-building tooling, infrastructure as code, VM Scale Sets, or equivalent runner infrastructure.
+
+This also enables ephemeral agents:
+
+Known image
+   ↓
+Create agent
+   ↓
+Run job
+   ↓
+Destroy agent
+
+rather than:
+
+Agent VM
+↓
+job
+↓
+job
+↓
+job
+↓
+six months of accumulated state...
+
+Ephemeral execution improves isolation and reduces configuration drift, though it adds provisioning/image-management considerations.
+
+The design principle is use the appropriate execution environment for each workload. A complex pipeline doesn't need to be entirely hosted or entirely self-hosted.
+
+You also connected this to VM templates: when many self-hosted agents are required, standardized images/templates help prevent configuration drift and make scaling/replacement reproducible.
+
+Ephemeral agents improve isolation further, but they don't eliminate maintenance; you still need to maintain the underlying image.
+
+- Hybrid doesn't mean duplicate builds. Build once and pass the artifact across execution environments.
+- Self-host everything isn't automatically better just because one stage needs private connectivity.
+- Ephemeral ≠ maintenance-free. The base image still needs patching and version management.
+- Different agents have different filesystems. Artifacts provide an explicit handoff.
+
+Use the least specialized execution environment that satisfies the job’s requirements.
+
+### Create reusable pipeline elements, including YAML templates, task groups, variables, and variable groups
+The four concepts are:
+
+YAML templates → reusable pipeline structure or steps.
+Task groups → reusable groups of tasks in classic pipelines.
+Variables → reusable values inside pipelines.
+Variable groups → centrally managed sets of variables shared across pipelines.
+
+A simple mental model:
+
+Reusable logic     → YAML template / task group
+Reusable values    → variable / variable group
+YAML templates
+
+A template can hold repeated steps, jobs, or stages.
+
+For example, instead of copying this into every repo:
+
+steps:
+- script: npm ci
+- script: npm test
+- script: npm run lint
+
+you could put it in a template:
+
+templates/test.yml
+
+and reference it from multiple pipelines.
+
+This reduces duplication and makes changes easier to apply consistently.
+
+Task groups
+
+Task groups are mainly associated with Classic pipelines in Azure DevOps.
+
+They let you bundle several configured tasks together and reuse them as one logical unit.
+
+Conceptually:
+
+Task group: BuildAndTest
+├── Restore
+├── Build
+├── Test
+└── Publish results
+
+For modern YAML pipelines, templates are usually the more relevant reusable mechanism.
+
+Variables
+
+Variables are reusable runtime values, such as:
+
+variables:
+  buildConfiguration: Release
+
+and then:
+
+- script: echo $(buildConfiguration)
+Variable groups
+
+A variable group centralizes values that multiple pipelines may need:
+
+Variable group: shared-prod-settings
+├── region = westeurope
+├── appName = orders-api
+└── someSecret = ***
+
+Pipelines can then reference that group rather than duplicating values in YAML.
+
+The key governance benefit is:
+
+Change the shared value once, instead of editing many pipelines.
+
+Parameters configure reusable pipeline logic; variables provide values to executing pipeline logic.
+
+- YAML templates → reusable steps/jobs/stages in YAML pipelines.
+- Task groups → reusable task sequences mainly for Classic pipelines.
+- Variables → values used within one pipeline/run.
+- Variable groups → centrally managed values shared across pipelines.
+- Template parameters → inputs that configure reusable YAML before execution.
+- Don’t use a variable group for every trivial one-off value.
+- Don’t copy repeated YAML across many repositories if a template can centralize it.
+- Parameters and variables are not interchangeable: parameters shape/configure template expansion; variables are primarily runtime values.
+- For Classic pipelines, expect task groups rather than YAML templates.
+- Shared secrets should be protected carefully; for stronger secret management, external secret stores such as Azure Key Vault may be appropriate.
+
+
+### Design and implement checks and approvals by using YAML-based environments
+The architecture is:
+
+YAML pipeline
+    ↓
+deployment job
+    ↓
+environment: production
+    ↓
+Environment checks
+├── approvals
+├── branch control
+├── business hours
+├── exclusive lock
+└── other configured checks
+    ↓
+deployment allowed
+
+The important distinction is that the YAML targets the environment, but approvals/checks are generally configured on the protected resource in Azure DevOps rather than being defined by the application pipeline YAML itself. This separation prevents someone who can edit pipeline YAML from simply removing a production approval.
+
+A deployment job might therefore contain:
+
+- stage: DeployProd
+  jobs:
+  - deployment: Deploy
+    environment: production
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - script: echo "Deploying"
+
+The key new construct is:
+
+deployment:
+
+rather than an ordinary:
+
+job:
+
+A deployment job is specifically designed for deployments and can target an Azure DevOps environment.
+
+Checks versus conditions
+
+This distinction is very exam-relevant:
+
+YAML condition
+→ pipeline-defined logic
+→ should this stage/job execute?
+
+Environment check
+→ protected-resource governance
+→ is this deployment permitted to proceed?
+
+For example:
+
+condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
+
+could stop the stage from running for a feature branch.
+
+An environment approval could require:
+
+Production deployment reached
+        ↓
+Approval required
+        ↓
+Authorized approver
+   ├─ Reject → stop
+   └─ Approve → continue
+
+These mechanisms complement each other rather than replacing one another.
+
+Checks
+
+Azure DevOps environments support checks such as approvals, branch control, business hours, REST/Azure Function checks, Azure Monitor alert checks, and exclusive locks. Checks are evaluated before a stage consuming the protected resource can proceed.
+
+For example, an exclusive lock addresses:
+
+Pipeline A ─┐
+            ├→ production
+Pipeline B ─┘
+
+when you don't want two deployments modifying production simultaneously.
