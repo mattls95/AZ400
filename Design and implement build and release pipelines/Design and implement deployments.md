@@ -2,7 +2,6 @@
 
 ## Design and implement deployments
 
-
 ### Design a deployment strategy, including blue-green, canary, ring, progressive exposure, feature flags, and A/B testing
 The strategies differ mainly in how much traffic/user exposure the new version gets, how quickly that exposure grows, and how rollback works.
 
