@@ -3,6 +3,7 @@
 ## Design and implement traceability and flow of work
 
 ### Design and implement a structure for the flow of work, including GitHub Flow
+
 For this objective:
 
 **Design and implement traceability and flow of work
@@ -37,19 +38,23 @@ One distinction worth locking in early:
 **GitHub Flow ≠ GitFlow**
 
 GitHub Flow is roughly:
-main
- **├──── feature/login ───── PR ──► main
- │
- └──── fix/payment ─────── PR ──► main**
-
+```mermaid
+flowchart LR
+    M["main"] --> FL["feature/login"] --> PR1["PR"] --> M
+    M --> FP["fix/payment"] --> PR2["PR"] --> M
+```
  GitFlow has more long-lived structure:
- **main
-  ↑
-release
-  ↑
-develop
-  ↑
-feature branches**
+```mermaid
+flowchart TD
+    N0["main"]
+    N1["release"]
+    N2["develop"]
+    N3["feature branches"]
+    N1 --> N0
+    N2 --> N1
+    N3 --> N2
+```
+
 GitFlow can make sense where releases are carefully staged or maintained separately, but GitHub Flow generally fits continuous integration / continuous delivery better because branches stay short-lived.
 
 For AZ-400, I’d lock in these points:
@@ -62,18 +67,22 @@ For AZ-400, I’d lock in these points:
 - After merge, the feature branch is usually deleted
 
 ### Design and implement a strategy for feedback cycles, including notifications and GitHub Issues
+
 A feedback-cycle strategy generally connects:
-Something happens
-       ↓
-Feedback is captured
-       ↓
-Right people are notified
-       ↓
-Someone responds
-       ↓
-Work is tracked
-       ↓
-Resolution
+```mermaid
+flowchart TD
+    N0["Something happens"]
+    N1["Feedback is captured"]
+    N2["Right people are notified"]
+    N3["Someone responds"]
+    N4["Work is tracked"]
+    N5["Resolution"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+    N4 --> N5
+```
 
 GitHub Issues can provide the tracked work item, while notifications help get information to the people who need to respond.
 
@@ -99,19 +108,22 @@ We want GitHub to connect the implementation back to the original feedback and a
 GitHub supports special keywords in a PR description, for example:
 Fixes #12
 Now we've created end-to-end traceability:
-User feedback
-     ↓
-Issue #12
-     ↓
-Assigned + labeled
-     ↓
-PR #18 — "Fixes #12"
-     ↓
-CI / review
-     ↓
-Merge to main
-     ↓
-Issue #12 closed
+```mermaid
+flowchart TD
+    N0["User feedback"]
+    N1["Issue #12"]
+    N2["Assigned + labeled"]
+    N3["PR #18 — &quot;Fixes #12&quot;"]
+    N4["CI / review"]
+    N5["Merge to main"]
+    N6["Issue #12 closed"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+    N4 --> N5
+    N5 --> N6
+```
 
 Exactly. That shows you understand the distinction:
 
@@ -132,6 +144,7 @@ One nuance for the exam: GitHub recognizes specific closing keywords such as fix
 - A good feedback strategy considers who needs what feedback and when, rather than simply maximizing notifications.
 
 ### Design and implement integration for tracking work, including GitHub projects, Azure Boards, and repositories
+
 GitHub Projects — planning and organizing work around GitHub Issues/PRs, with views such as tables, boards, and roadmaps.
 
 Azure Boards — Azure DevOps work tracking: epics, features, user stories/product backlog items, tasks, bugs, queries, backlogs, sprints, etc.
@@ -139,17 +152,20 @@ Azure Boards — Azure DevOps work tracking: epics, features, user stories/produ
 Repositories — where the implementation lives: commits, branches and PRs, whether that's GitHub repositories or Azure Repos.
 
 With integration, we're aiming for:
-Requirement
-    ↓
-Work item
-    ↓
-Repository
-    ↓
-Branch / commit
-    ↓
-Pull request
-    ↓
-Build / deployment
+```mermaid
+flowchart TD
+    N0["Requirement"]
+    N1["Work item"]
+    N2["Repository"]
+    N3["Branch / commit"]
+    N4["Pull request"]
+    N5["Build / deployment"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+    N4 --> N5
+```
 
 GitHub Projects vs GitHub Issues
 
@@ -174,11 +190,12 @@ And importantly, Projects aren't just static boards. You can use different views
 Now compare that with Azure Boards
 
 Azure Boards solves a similar work-management problem but sits in the Azure DevOps ecosystem and supports a more structured hierarchy.
-Epic
-└── Feature
-    └── User Story
-        ├── Task
-        └── Task
+```mermaid
+flowchart TD
+    E["Epic"] --> F["Feature"] --> U["User Story"]
+    U --> T1["Task"]
+    U --> T2["Task"]
+```
 
 Don't confuse the work-tracking system with the source-control system.
 integrate systems when each already serves its role well, rather than moving everything into one platform just for traceability.
@@ -192,6 +209,7 @@ the planning artifact and implementation artifact can live in different systems 
 - Fixes AB#<ID> → link it with resolution/state-transition intent.
 
 ### Design and implement source, bug, and quality traceability
+
 Source traceability answers:
 
 Which commit, branch, and PR implemented this work?
@@ -204,32 +222,45 @@ Quality traceability answers:
 
 What evidence shows that this specific change passed validation?
 Now quality traceability extends that chain:
-Bug #42
-   ↓
-PR #51
-   ↓
-Commit abc123
-   ↓
-CI run #900
-   ├── Build ✅
-   ├── Unit tests ✅
-   ├── Security scan ✅
-   └── Code quality ✅
-   ↓
-Merge
+```mermaid
+flowchart TD
+    N0["Bug #42"]
+    N1["PR #51"]
+    N2["Commit abc123"]
+    N3["CI run #900<br/>├── Build ✅<br/>├── Unit tests ✅<br/>├── Security scan ✅<br/>└── Code quality ✅"]
+    N4["Merge"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+```
 
 BUG TRACEABILITY
 "Why was this change made?"
-Bug #42 ──────► PR #51
-
+```mermaid
+flowchart LR
+    N0["Bug #42"]
+    N1["PR #51"]
+    N0 --> N1
+```
 SOURCE TRACEABILITY
 "What code implemented it?"
-PR #51 ──────► Commit abc123
-
+```mermaid
+flowchart LR
+    N0["PR #51"]
+    N1["Commit abc123"]
+    N0 --> N1
+```
 QUALITY TRACEABILITY
 "How do we know that code was good?"
-Commit abc123 ──────► Build ──────► Test results
-
+```mermaid
+flowchart LR
+    N0["Commit abc123"]
+    N1["Build"]
+    N2["Test results"]
+    N0 --> N1
+    N1 --> N2
+```
 | Traceability | Question                                                            |
 | ------------ | ------------------------------------------------------------------- |
 | **Source**   | What code/commit/PR produced this artifact or change?               |
@@ -237,21 +268,18 @@ Commit abc123 ──────► Build ──────► Test results
 | **Quality**  | What build/tests/quality checks validated that source revision?     |
 
 
-Bug #42
-  │
-  │  Bug traceability
-  ▼
-PR #51
-  │
-  │  Source traceability
-  ▼
-Commit abc123
-  │
-  │  Quality traceability
-  ▼
-Build #700
-  ↓
-Tests / quality checks ✅
+```mermaid
+flowchart TD
+    N0["Bug #42<br/>│<br/>│  Bug traceability"]
+    N1["PR #51<br/>│<br/>│  Source traceability"]
+    N2["Commit abc123<br/>│<br/>│  Quality traceability"]
+    N3["Build #700"]
+    N4["Tests / quality checks ✅"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+```
 
 “Which code/change/build produced this?” → source traceability
 “Which change fixed this defect?” → bug traceability
@@ -264,28 +292,27 @@ Tests / quality checks ✅
 | **Quality traceability** | **What proves this code was validated?** |
 
 ## Design and implement appropriate metrics and queries for DevOps
-Delivery
-Deployment at 14:14
-      ↓
-Operations
-Errors spike at 14:15
-      ↓
-KQL / telemetry
-Identify failing endpoint
-      ↓
-Logs / exceptions
-Find root cause
-      ↓
-Bug/work item
-      ↓
-Source fix + PR
-      ↓
-Tests + security checks
-      ↓
-Deployment
-      ↓
-Operations
-Verify error rate returns to normal
+
+```mermaid
+flowchart TD
+    N0["Delivery<br/>Deployment at 14:14"]
+    N1["Operations<br/>Errors spike at 14:15"]
+    N2["KQL / telemetry<br/>Identify failing endpoint"]
+    N3["Logs / exceptions<br/>Find root cause"]
+    N4["Bug/work item"]
+    N5["Source fix + PR"]
+    N6["Tests + security checks"]
+    N7["Deployment"]
+    N8["Operations<br/>Verify error rate returns to normal"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+    N4 --> N5
+    N5 --> N6
+    N6 --> N7
+    N7 --> N8
+```
 ### Design and implement a dashboard, including flow of work, such as cycle times, time to recovery, and lead time
 
 A useful mental model is:
@@ -317,6 +344,7 @@ Cycle ↑ → investigate the active delivery process.
 Recovery ↑ → investigate detection, incident response, remediation and restoration.
 
 ### Design and implement appropriate metrics and queries for project planning
+
 - How much work is waiting?
 - How much can the team realistically complete?
 - Are we consistently overcommitting?
@@ -380,6 +408,7 @@ Remaining work
 - Burndown shows remaining work and progress during an iteration.
 
 ### Design and implement appropriate metrics and queries for development
+
 For development, useful metrics and queries might answer questions such as: Are builds succeeding? Which PRs are waiting for review? Which builds are failing? Are tests becoming unreliable? How long are PRs sitting open? Where are development bottlenecks?
 
 **Example: build success rate**
@@ -402,6 +431,7 @@ A compact set of development-focused metrics to recognize is:
 
 
 ### Design and implement appropriate metrics and queries for testing
+
 How do we measure whether testing is effective, reliable, and giving developers useful feedback?
 
 - Test pass rate / failure rate
@@ -439,44 +469,50 @@ Failed tests from recent builds, grouped or filtered to identify recurring failu
 
 
 ### Design and implement appropriate metrics and queries for security
-SECURITY METRIC
-“How are we doing overall?”
-        ↓
-Examples:
-Critical vulnerabilities: 3
-High vulnerabilities: 12
-Mean remediation time: 4 days
-Secret detections this month: 2
 
-SECURITY QUERY
-“Which specific items need action?”
-        ↓
-Examples:
-Critical vulnerabilities still open
-High-severity findings older than 7 days
-Security bugs with no assignee
-Builds failing dependency scanning
+```mermaid
+flowchart TD
+    N0["SECURITY METRIC<br/>“How are we doing overall?”"]
+    N1["Examples:<br/>Critical vulnerabilities: 3<br/>High vulnerabilities: 12<br/>Mean remediation time: 4 days<br/>Secret detections this month: 2"]
+    N0 --> N1
+```
+
+```mermaid
+flowchart TD
+    N0["SECURITY QUERY<br/>“Which specific items need action?”"]
+    N1["Examples:<br/>Critical vulnerabilities still open<br/>High-severity findings older than 7 days<br/>Security bugs with no assignee<br/>Builds failing dependency scanning"]
+    N0 --> N1
+```
 
 Age matters as well as severity.
 
 A better security dashboard would combine several dimensions:
-Severity
-   +
-Age / remediation time
-   +
-Exposure / exploitability
-   +
-Trend
-   ↓
-Security risk picture
+```mermaid
+flowchart TD
+    N0["Severity<br/>+<br/>Age / remediation time<br/>+<br/>Exposure / exploitability<br/>+<br/>Trend"]
+    N1["Security risk picture"]
+    N0 --> N1
+```
 
 In a fuller DevSecOps pipeline you might have several signals:
-Dependency scanning ──► vulnerable packages?
-Secret scanning     ──► exposed credentials?
-SAST                ──► insecure source patterns?
-DAST                ──► runtime vulnerabilities?
-Container scanning  ──► vulnerable image/packages?
-
+```mermaid
+flowchart LR
+    N0["Dependency scanning"]
+    N1["vulnerable packages?"]
+    N2["Secret scanning"]
+    N3["exposed credentials?"]
+    N4["SAST"]
+    N5["insecure source patterns?"]
+    N6["DAST"]
+    N7["runtime vulnerabilities?"]
+    N8["Container scanning"]
+    N9["vulnerable image/packages?"]
+    N0 --> N1
+    N2 --> N3
+    N4 --> N5
+    N6 --> N7
+    N8 --> N9
+```
 - Metrics expose security posture and trends: vulnerability count by severity, remediation time, finding age, new findings, scan success/failure, etc.
 - Queries identify actionable findings: e.g. High/Critical + unresolved + older than SLA.
 - Risk/severity matters — don't prioritize purely by total count.
@@ -486,6 +522,7 @@ Container scanning  ──► vulnerable image/packages?
 - One scanner isn't complete security coverage — dependency scanning, SAST, secret scanning, and other controls answer different questions.
 
 ### Design and implement appropriate metrics and queries for delivery
+
 For delivery, think primarily about the CI/CD path from a releasable change through deployment into an environment.
 
 Useful delivery metrics include deployment frequency, deployment success/failure rate, deployment duration, lead time for changes, and rollback/recovery information. You'll notice some overlap with earlier metrics—that's normal because DevOps metrics span stages of the lifecycle.
@@ -513,6 +550,7 @@ Time to restore/recover
 - Which deployments failed?	Query/drill-down into failed deployments
 
 ### Design and implement appropriate metrics and queries for operations
+
 Is the production system healthy, reliable, and performing as expected?
 healthy servers do not necessarily mean a healthy service.
 A useful operations model to know is the four “golden signals”:
@@ -537,15 +575,18 @@ Typical operational metrics include:
 - SLA/SLO compliance
 
 A useful operational drill-down is:
-Error-rate spike
-   ↓
-Group failures by status code
-   ↓
-500s dominate
-   ↓
-Query affected endpoints / dependencies / exceptions
-   ↓
-Find root cause
+```mermaid
+flowchart TD
+    N0["Error-rate spike"]
+    N1["Group failures by status code"]
+    N2["500s dominate"]
+    N3["Query affected endpoints / dependencies / exceptions"]
+    N4["Find root cause"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+```
 
 A typical Application Insights query to find failing requests could start with:
 
@@ -561,15 +602,18 @@ requests
 
 Conceptually:
 
-Telemetry
-   ↓
-Filter failed requests
-   ↓
-Group by result code
-   ↓
-Count
-   ↓
-Largest failure category
+```mermaid
+flowchart TD
+    N0["Telemetry"]
+    N1["Filter failed requests"]
+    N2["Group by result code"]
+    N3["Count"]
+    N4["Largest failure category"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+```
 
 Don't worry about memorizing every KQL operator yet. For AZ-400, you should be comfortable recognizing the pattern:
 where → filter
@@ -622,13 +666,16 @@ flowchart LR
     E --> F[Deploy]
 ```
 The major DevOps advantage is that the diagram itself is source text:
-diagram change
-     ↓
-Git diff
-     ↓
-PR review
-     ↓
-Version history
+```mermaid
+flowchart TD
+    N0["diagram change"]
+    N1["Git diff"]
+    N2["PR review"]
+    N3["Version history"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+```
 
 Wiki vs repository documentation
 
@@ -648,26 +695,33 @@ Project wiki → Azure DevOps provisions a wiki Git repository for the project. 
 Publish code as wiki → publish Markdown content from an existing Azure Repos Git repository as a wiki. This is useful when documentation already lives alongside source and you want to expose it as a navigable wiki.
 
 So your decision model is:
-Code-specific documentation
-README / docs in repository
-        ↓
-Versioned with the code
+```mermaid
+flowchart TD
+    N0["Code-specific documentation<br/>README / docs in repository"]
+    N1["Versioned with the code"]
+    N0 --> N1
+```
 
 
-Existing repository documentation
-that should appear as a wiki
-        ↓
-Publish code as wiki
+```mermaid
+flowchart TD
+    N0["Existing repository documentation<br/>that should appear as a wiki"]
+    N1["Publish code as wiki"]
+    N0 --> N1
+```
 
 
-Project/team-wide documentation
-runbooks, onboarding, architecture, processes
-        ↓
-Project wiki
+```mermaid
+flowchart TD
+    N0["Project/team-wide documentation<br/>runbooks, onboarding, architecture, processes"]
+    N1["Project wiki"]
+    N0 --> N1
+```
 
 For this AZ-400 bullet, remember the decision points: Markdown for structured text documentation, Mermaid for diagrams-as-code, project wiki for broader project/team knowledge, and publish code as wiki when existing repository Markdown should remain the source of truth while being presented as a wiki.
 
 ### Configure release documentation, including release notes and API documentation
+
 Release notes answer:
 
 “What changed in this release?”
@@ -678,15 +732,18 @@ API documentation answers:
 
 Release notes:
 Good release notes can be generated from traceable development information:
-Work items / Issues
-        ↓
-PRs
-        ↓
-Commits
-        ↓
-Release
-        ↓
-Release notes
+```mermaid
+flowchart TD
+    N0["Work items / Issues"]
+    N1["PRs"]
+    N2["Commits"]
+    N3["Release"]
+    N4["Release notes"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+```
 
 This is where all the traceability work we've done becomes useful. Instead of a developer manually trying to remember what happened since the last release, the release process can derive information from work items, commits, PRs, tags, builds, or deployments.
 
@@ -719,6 +776,7 @@ So the exam takeaway for this bullet is: release notes should accurately reflect
 - Publish documentation for supported API versions.
 
 ### Automate creation of documentation from Git history
+
 - Define a reliable release boundary, usually previous tag → current tag.
 - Use consistent PR titles, labels, or commit conventions so automation can categorize changes.
 - Prefer PR/work-item metadata over raw commit messages when you want more human-friendly notes.
@@ -732,6 +790,7 @@ Automation can turn that into sections like Features, Bug Fixes, and Documentati
 Standardize Git/PR metadata → validate it in CI or repository policy → generate changelog/release notes automatically from tags/commits/PRs.
 
 ### Configure integration by using webhooks
+
 “When event X happens here, send an HTTP request to system Y.” Webhook → the source system proactively sends an event when something changes. Typical webhook payloads include information about the event, repository/project, actor, and affected object such as a PR, issue, push, or release.
 
 What's actually configured?
@@ -750,17 +809,14 @@ Content/payload format
 Usually JSON
 
 That's why webhook receivers should verify authenticity, commonly using a shared secret and a cryptographic signature supplied with the request.
-GitHub
-  │
-  │ payload + signature
-  ▼
-Webhook receiver
-  │
-  ├─ Verify signature ❌ → reject
-  │
-  └─ Verify signature ✅
-             ↓
-        Process event
+```mermaid
+flowchart TD
+    N0["GitHub<br/>│<br/>│ payload + signature"]
+    N1["Webhook receiver<br/>│<br/>├─ Verify signature ❌ → reject<br/>│<br/>└─ Verify signature ✅"]
+    N2["Process event"]
+    N0 --> N1
+    N1 --> N2
+```
 
 That leads to three important webhook design concerns for AZ-400:
 - Authenticity → verify the webhook signature/secret so forged events are rejected.
@@ -775,25 +831,29 @@ That leads to three important webhook design concerns for AZ-400:
 - Handle retries, duplicate deliveries/idempotency, and logging/monitoring.
 - Avoid triggering sensitive actions from unverified requests.
 
-GitHub event
-   ↓
-Webhook subscription
-   ↓
-HTTPS POST
-   ↓
-Public receiver endpoint
-   ↓
-Verify signature
-   ↓
-Validate event/payload
-   ↓
-Perform action
-   ↓
-Return 2xx
-   ↓
-Log / monitor delivery
+```mermaid
+flowchart TD
+    N0["GitHub event"]
+    N1["Webhook subscription"]
+    N2["HTTPS POST"]
+    N3["Public receiver endpoint"]
+    N4["Verify signature"]
+    N5["Validate event/payload"]
+    N6["Perform action"]
+    N7["Return 2xx"]
+    N8["Log / monitor delivery"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+    N4 --> N5
+    N5 --> N6
+    N6 --> N7
+    N7 --> N8
+```
 
 ### Configure integration between Azure Boards and GitHub repositories
+
 One is scope of the connection: Azure Boards can be connected to specific GitHub repositories, so you should think about which repos actually need integration rather than broadly connecting everything.
 
 Another is permissions/authentication: the integration depends on authorized access between Azure DevOps and GitHub. If permissions are missing or revoked, linking activity will stop working even though the work items and repos still exist.
@@ -810,38 +870,39 @@ Using Azure Boards does not require Azure Repos.
 
 
 ### Configure integration between GitHub or Azure DevOps and Microsoft Teams
-Get useful DevOps events into the collaboration space where the team works.
-GitHub / Azure DevOps
-        ↓
-PR / build / deployment / work-item event
-        ↓
-Microsoft Teams
-        ↓
-Relevant channel
-        ↓
-Team can see and act on it
+
+```mermaid
+flowchart TD
+    N0["Get useful DevOps events into the collaboration space where the team works.<br/>GitHub / Azure DevOps"]
+    N1["PR / build / deployment / work-item event"]
+    N2["Microsoft Teams"]
+    N3["Relevant channel"]
+    N4["Team can see and act on it"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+```
 
 For GitHub specifically, Microsoft Teams has supported GitHub integration that can subscribe a channel/chat to repository activity. For Azure DevOps, Teams integration can surface Azure Boards/work-item activity and other Azure DevOps events, depending on the integration being used. Because the exact Microsoft Teams/GitHub/Azure DevOps integration options can change, when we do the hands-on configuration I'll check the current Microsoft/GitHub instructions rather than give you potentially outdated menu clicks.
 
 GitHub vs Azure DevOps → Teams
 
 The exam may give you either side of this:
-GitHub
-├── Pull requests
-├── Issues
-├── Releases
-└── CI/repository activity
-        ↓
-   Microsoft Teams
+```mermaid
+flowchart TD
+    N0["GitHub<br/>├── Pull requests<br/>├── Issues<br/>├── Releases<br/>└── CI/repository activity"]
+    N1["Microsoft Teams"]
+    N0 --> N1
+```
 
 
-Azure DevOps
-├── Azure Boards work items
-├── Builds/pipelines
-├── Releases/deployments
-└── Other project events
-        ↓
-   Microsoft Teams
+```mermaid
+flowchart TD
+    N0["Azure DevOps<br/>├── Azure Boards work items<br/>├── Builds/pipelines<br/>├── Releases/deployments<br/>└── Other project events"]
+    N1["Microsoft Teams"]
+    N0 --> N1
+```
 
 Which events should be routed to which people/channel, with what filtering?
 
@@ -859,19 +920,22 @@ Microsoft documents these as the current supported integrations.
 
 For example, for Azure Boards, an enterprise setup looks like:
 
-Teams channel
-     ↓
-Install Azure Boards app
-     ↓
-Sign in
-     ↓
-Link Azure DevOps project
-     ↓
-Configure subscriptions
-     ↓
-Filter events
-     ↓
-Notifications appear in channel
+```mermaid
+flowchart TD
+    N0["Teams channel"]
+    N1["Install Azure Boards app"]
+    N2["Sign in"]
+    N3["Link Azure DevOps project"]
+    N4["Configure subscriptions"]
+    N5["Filter events"]
+    N6["Notifications appear in channel"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+    N4 --> N5
+    N5 --> N6
+```
 
 Inside the Teams channel, you sign in:
 
@@ -933,19 +997,12 @@ Workflow subscriptions can also be filtered by things such as workflow name, bra
 
 So an enterprise might configure:
 
-GitHub
- │
- ├── PR review requested
- │          ↓
- │     Development Teams channel
- │
- ├── Critical security event
- │          ↓
- │     Security Teams channel
- │
- └── Production workflow/deployment
-            ↓
-       Operations Teams channel
+```mermaid
+flowchart TD
+    N0["GitHub<br/>│<br/>├── PR review requested<br/>│          ↓<br/>│     Development Teams channel<br/>│<br/>├── Critical security event<br/>│          ↓<br/>│     Security Teams channel<br/>│<br/>└── Production workflow/deployment"]
+    N1["Operations Teams channel"]
+    N0 --> N1
+```
 
 So for AZ-400, I wouldn't memorize every Teams button. Remember the architecture:
 
@@ -956,6 +1013,7 @@ Install appropriate integration → authenticate → connect project/repository 
 ## Design and implement branching strategies for the source code
 
 ### Design a branch strategy, including trunk-based, feature branch, and release branch
+
 At a high level, the exam wants you to choose a branching model that fits the team's release cadence, integration needs, and risk tolerance.
 
 Trunk-based:
@@ -1005,11 +1063,12 @@ Feature branch	Temporarily isolate development of a change
 Release branch	Maintain/stabilize a release independently
 
 Feature branches become problematic when they live too long:
-main       A──B──C──D──E──F──G
-            \
-feature      X──Y────────────Z
-                              ↑
-                      large divergence
+```mermaid
+flowchart TD
+    N0["main       A──B──C──D──E──F──G<br/>\<br/>feature      X──Y────────────Z"]
+    N1["large divergence"]
+    N1 --> N0
+```
 
 Meanwhile, main has changed significantly. When the feature finally comes back, you may face large merge conflicts and discover integration problems very late. Feature flags become important here. Rather than keeping:
 
@@ -1026,23 +1085,28 @@ main
 
  Production can continue using the old behavior while development code is continuously integrated.
 
- Frequent integration
-small changes
-continuous delivery
-        ↓
-TRUNK-BASED
+```mermaid
+flowchart TD
+    N0["Frequent integration<br/>small changes<br/>continuous delivery"]
+    N1["TRUNK-BASED"]
+    N0 --> N1
+```
 
 
-Temporary isolation
-for a particular feature/change
-        ↓
-FEATURE BRANCH
+```mermaid
+flowchart TD
+    N0["Temporary isolation<br/>for a particular feature/change"]
+    N1["FEATURE BRANCH"]
+    N0 --> N1
+```
 
 
-Maintain/stabilize
-a release independently
-        ↓
-RELEASE BRANCH
+```mermaid
+flowchart TD
+    N0["Maintain/stabilize<br/>a release independently"]
+    N1["RELEASE BRANCH"]
+    N0 --> N1
+```
 
 Trunk-based → frequent integration; branches, if used, are short-lived. Works particularly well with strong CI/CD and feature flags.
 Feature branches → temporary isolation of a specific change. Avoid letting them become unnecessarily long-lived.
@@ -1054,17 +1118,20 @@ Branch policies → protect whichever strategy you choose with PR reviews, statu
 ### Design and implement a pull request workflow by using branch policies and branch protection rules
 
 Define how a pull request is validated and approved before code can enter a protected branch. A PR workflow is not just “open PR → merge.” It is usually:
-Developer branch
-      ↓
-Pull Request
-      ↓
-Automated validation
-      ↓
-Review / approval
-      ↓
-Policy checks
-      ↓
-Merge to protected branch
+```mermaid
+flowchart TD
+    N0["Developer branch"]
+    N1["Pull Request"]
+    N2["Automated validation"]
+    N3["Review / approval"]
+    N4["Policy checks"]
+    N5["Merge to protected branch"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+    N4 --> N5
+```
 
 The two main enforcement mechanisms are:
 - GitHub branch protection / rulesets
@@ -1095,6 +1162,7 @@ For AZ-400, the key distinction is between technical validation and human review
 - tightly controlled bypass permissions
 
 ### Implement branch merging restrictions by using branch policies and branch protection rules
+
 Who is allowed to merge, under what conditions, and by which merge methods?
 Typical restrictions include:
 
@@ -1109,19 +1177,22 @@ Require PRs before merge
 
 The last two points are what make this bullet a bit different from the previous one.
 
-PR ready?
-   ↓
-Checks passed?
-   ↓
-Approvals valid?
-   ↓
-Conversations resolved?
-   ↓
-User allowed to merge?
-   ↓
-Allowed merge method?
-   ↓
-Merge
+```mermaid
+flowchart TD
+    N0["PR ready?"]
+    N1["Checks passed?"]
+    N2["Approvals valid?"]
+    N3["Conversations resolved?"]
+    N4["User allowed to merge?"]
+    N5["Allowed merge method?"]
+    N6["Merge"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+    N4 --> N5
+    N5 --> N6
+```
 
 
 Merge methods
@@ -1134,10 +1205,12 @@ Merge commit
 feature ──A──B──┐
                 M── main
 
-Squash merge
-feature ──A──B──C
-                ↓
-main ───────────S
+```mermaid
+flowchart TD
+    N0["Squash merge<br/>feature ──A──B──C"]
+    N1["main ───────────S"]
+    N0 --> N1
+```
 
 Rebase
 feature commits replayed
@@ -1154,6 +1227,7 @@ For this AZ-400 bullet, keep these distinctions clear:
 ## Configure and manage repositories
 
 ### Design and implement a strategy for managing large files, including Git Large File Storage (LFS) and git-fat
+
 The core problem is that Git is optimized for source-like content and retains history. Large binary files—videos, PSDs, archives, datasets, binaries—can make repositories grow very quickly because historical versions remain part of the repository. git-fat describes exactly this problem: large binary history can make repository size impractical.
 
 Git LFS solves it by keeping a small pointer file in Git while storing the real large object separately. GitHub then uses that pointer to retrieve the actual file when needed.
@@ -1173,13 +1247,12 @@ versus:
 
 Git + LFS
 
-Git repository
-├── source.py
-└── video.mp4 pointer
-          │
-          ▼
-     LFS storage
-     actual video.mp4
+```mermaid
+flowchart TD
+    N0["Git repository<br/>├── source.py<br/>└── video.mp4 pointer<br/>│"]
+    N1["LFS storage<br/>actual video.mp4"]
+    N0 --> N1
+```
 A Git LFS pointer is tiny metadata containing things such as the object's identifier and size rather than the actual binary content.
 
 Git LFS workflow
@@ -1211,16 +1284,19 @@ Its model typically uses .gitattributes plus an external object store reachable 
 
 So roughly:
 
-Git LFS
-Git pointer
-   ↓
-LFS server/storage
+```mermaid
+flowchart TD
+    N0["Git LFS<br/>Git pointer"]
+    N1["LFS server/storage"]
+    N0 --> N1
+```
 
-git-fat
-Git placeholder/reference
-   ↓
-external fat-file store
-often rsync/SSH
+```mermaid
+flowchart TD
+    N0["git-fat<br/>Git placeholder/reference"]
+    N1["external fat-file store<br/>often rsync/SSH"]
+    N0 --> N1
+```
 
 For AZ-400, I'd treat Git LFS as the more important technology to understand operationally, while recognizing what git-fat is and the problem it solves.
 
@@ -1264,6 +1340,7 @@ CI only needs latest revision
 → Shallow clone/fetch with depth
 
 ### Design a strategy for scaling and optimizing a Git repository, including Scalar and cross-repository sharing
+
 What do you do when the repository itself is so large that normal Git operations become slow, even if individual files are not the main issue?
 
 Scalar
@@ -1347,6 +1424,7 @@ And remember that Scalar isn't a replacement for Git. It's designed to configure
 One useful exam habit is to identify what dimension is actually large before choosing an optimization: file size, working-tree size, object transfer, history depth, or duplicated objects.
 
 ### Configure permissions in the source control repository
+
 The core principle is least privilege:
 
 Give users and service identities only the permissions they need to perform their role.
@@ -1419,11 +1497,15 @@ The recurring exam question is essentially:
 Who needs access, to what resource, and what is the minimum permission they need to do their job?
 
 ### Configure tags to organize the source control repository
+
 Git tags are important because they give a meaningful name to a specific point in repository history.
 
-commit A ── commit B ── commit C ── commit D
-                         ↑
-                       v1.0.0
+```mermaid
+flowchart TD
+    N0["commit A ── commit B ── commit C ── commit D"]
+    N1["v1.0.0"]
+    N1 --> N0
+```
 
 Instead of saying:
 
@@ -1457,13 +1539,14 @@ git push origin v1.0.0
 
 Tags also connect directly to what you practiced earlier with release notes:
 
-v1.0.0
-   │
-   │ changes since previous release
-   ▼
-v1.1.0
-   ↓
-Release notes
+```mermaid
+flowchart TD
+    N0["v1.0.0<br/>│<br/>│ changes since previous release"]
+    N1["v1.1.0"]
+    N2["Release notes"]
+    N0 --> N1
+    N1 --> N2
+```
 
 Tag naming strategy
 
@@ -1493,6 +1576,7 @@ For “Configure tags to organize the source control repository”, remember:
 - Tags provide release → exact source revision traceability.
 
 ### Recover specific data by using Git commands
+
 Typical recovery scenarios include:
 
 - Recover a deleted file.
@@ -1526,15 +1610,16 @@ git restore config.yaml
 
 Conceptually:
 
-HEAD
-config.yaml exists
-      ↓
-Working tree
-config.yaml accidentally deleted ❌
-      ↓
-git restore config.yaml
-      ↓
-Working tree restored ✅
+```mermaid
+flowchart TD
+    N0["HEAD<br/>config.yaml exists"]
+    N1["Working tree<br/>config.yaml accidentally deleted ❌"]
+    N2["git restore config.yaml"]
+    N3["Working tree restored ✅"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+```
 
 Scenario 2: recover an older version
 
@@ -1587,9 +1672,12 @@ is designed for.
 
 Suppose:
 
-A ─ B ─ C ─ D
-        ↑
-     bad commit
+```mermaid
+flowchart TD
+    N0["A ─ B ─ C ─ D"]
+    N1["bad commit"]
+    N1 --> N0
+```
 
 Running:
 
@@ -1668,6 +1756,7 @@ Inspect content from a commit	git show
 The important exam distinction is shared vs local history. On shared/protected history, prefer operations such as revert that preserve history. For local mistakes, tools such as reset and reflog give you more freedom.
 
 ### Remove specific data from source control
+
 Removing something from the current repository state is not the same as removing it from Git history.
 
 We touched this when discussing large files.
@@ -1772,15 +1861,18 @@ Container images, depending on the platform/service
 
 A typical flow is:
 
-Source code
-   ↓
-Build
-   ↓
-Package
-   ↓
-Package registry/feed
-   ↓
-Other apps/pipelines consume versioned package
+```mermaid
+flowchart TD
+    N0["Source code"]
+    N1["Build"]
+    N2["Package"]
+    N3["Package registry/feed"]
+    N4["Other apps/pipelines consume versioned package"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+```
 
 Two services explicitly named by the exam are:
 
@@ -1807,15 +1899,19 @@ It is:
 
 A useful first mental model is:
 
-GitHub-centric org
-repos + PRs + Actions
-        ↓
-GitHub Packages often fits naturally
+```mermaid
+flowchart TD
+    N0["GitHub-centric org<br/>repos + PRs + Actions"]
+    N1["GitHub Packages often fits naturally"]
+    N0 --> N1
+```
 
-Azure DevOps-centric org
-Repos/Boards/Pipelines
-        ↓
-Azure Artifacts often fits naturally
+```mermaid
+flowchart TD
+    N0["Azure DevOps-centric org<br/>Repos/Boards/Pipelines"]
+    N1["Azure Artifacts often fits naturally"]
+    N0 --> N1
+```
 
 A major trap is confusing packages with pipeline artifacts.
 
@@ -1827,20 +1923,23 @@ Five different applications need to reference that library by version.
 
 That's a package-management problem:
 
-OrderValidation
-├── 1.4.0
-├── 1.4.1
-└── 1.4.2
-       ↓
-Applications declare dependency
+```mermaid
+flowchart TD
+    N0["OrderValidation<br/>├── 1.4.0<br/>├── 1.4.1<br/>└── 1.4.2"]
+    N1["Applications declare dependency"]
+    N0 --> N1
+```
 
 Compare that with:
 
-Pipeline run #742
-      ↓
-application.zip
-      ↓
-Deploy this exact build
+```mermaid
+flowchart TD
+    N0["Pipeline run #742"]
+    N1["application.zip"]
+    N2["Deploy this exact build"]
+    N0 --> N1
+    N1 --> N2
+```
 
 That's more naturally a pipeline/build artifact.
 
@@ -1894,15 +1993,17 @@ Publishing is explicit: the feed does not magically update; a developer or pipel
 
 
 ### Design and implement package feeds and views for local and upstream packages
+
 A useful mental model is:
 
-Consumer
-   ↓
-Azure Artifacts feed
-   ├── locally published packages
-   └── upstream packages
-          ↓
-   NuGet.org / PyPI / npmjs / another Azure Artifacts feed
+```mermaid
+flowchart TD
+    N0["Consumer"]
+    N1["Azure Artifacts feed<br/>├── locally published packages<br/>└── upstream packages"]
+    N2["NuGet.org / PyPI / npmjs / another Azure Artifacts feed"]
+    N0 --> N1
+    N1 --> N2
+```
 
 A feed is the package repository itself. It can contain packages you publish directly and packages cached/saved from upstream sources. Azure Artifacts supports project-scoped and organization-scoped feeds, with permissions controlling who can read, publish, or administer them.
 
@@ -1991,49 +2092,59 @@ Promotion does not rebuild, copy, or move the package.
 
 The same az400-utils 0.1.0 you tested is promoted:
 
-Build once
-    ↓
-az400-utils 0.1.0
-    ↓
-Test exact package
-    ↓
-Promote exact package
-    ↓
-@Release
+```mermaid
+flowchart TD
+    N0["Build once"]
+    N1["az400-utils 0.1.0"]
+    N2["Test exact package"]
+    N3["Promote exact package"]
+    N4["@Release"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+```
 
 That's much safer than rebuilding after validation.
 
 Upstream packages:
 
-pip
- ↓
-Azure Artifacts
- ↓
-PyPI upstream
- ↓
-pendulum retrieved
- ↓
-saved in your feed
+```mermaid
+flowchart TD
+    N0["pip"]
+    N1["Azure Artifacts"]
+    N2["PyPI upstream"]
+    N3["pendulum retrieved"]
+    N4["saved in your feed"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+```
 
 Local package + views:
 
-az400-utils 0.1.0
- ↓
-published to feed
- ↓
-@Local
- ↓
-validated
- ↓
-promoted
- ↓
-@Release
+```mermaid
+flowchart TD
+    N0["az400-utils 0.1.0"]
+    N1["published to feed"]
+    N2["@Local"]
+    N3["validated"]
+    N4["promoted"]
+    N5["@Release"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+    N4 --> N5
+```
 
 Same package remains in @Local
 
 Source validation and package validation are related, but not identical.
 
 ### Design and implement a dependency versioning strategy for code assets and packages, including semantic versioning (SemVer) and date-based (CalVer)
+
 SemVer
 
 Semantic Versioning uses:
@@ -2111,13 +2222,16 @@ Suppose you're developing that breaking 4.0.0 release, but it isn't production-r
 
 Instead of publishing 4.0.0 immediately, SemVer supports prerelease identifiers:
 
-4.0.0-alpha.1
-      ↓
-4.0.0-beta.1
-      ↓
-4.0.0-rc.1
-      ↓
-4.0.0
+```mermaid
+flowchart TD
+    N0["4.0.0-alpha.1"]
+    N1["4.0.0-beta.1"]
+    N2["4.0.0-rc.1"]
+    N3["4.0.0"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+```
 
 Conceptually:
 
@@ -2143,6 +2257,7 @@ Package version and Azure Artifacts view are independent. Promotion changes the 
 
 
 ### Design and implement a versioning strategy for pipeline artifacts
+
 The key distinction from the package-versioning point is:
 
 Package versioning identifies a reusable dependency.
@@ -2150,16 +2265,18 @@ Pipeline artifact versioning identifies the output of a particular pipeline run/
 
 For example:
 
-Source commit abc123
-        ↓
-Pipeline run 842
-        ↓
-Artifact
-eshop-web-842.zip
-        ↓
-Deployment
-        ↓
-Production
+```mermaid
+flowchart TD
+    N0["Source commit abc123"]
+    N1["Pipeline run 842"]
+    N2["Artifact<br/>eshop-web-842.zip"]
+    N3["Deployment"]
+    N4["Production"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+```
 
 
 The important property is traceability:
@@ -2227,21 +2344,25 @@ Version and identify pipeline artifacts so you can trace them to the exact build
 ## Design and implement a testing strategy for pipelines
 
 ### Design and implement quality and release gates, including security and governance
+
 This point is about deciding what must be true before a change is allowed to progress through a pipeline.
 
 A gate is essentially a policy checkpoint:
 
-Build
-  ↓
-Quality checks
-  ↓
-Security checks
-  ↓
-Governance checks
-  ↓
-Release gate
-  ↓
-Deploy
+```mermaid
+flowchart TD
+    N0["Build"]
+    N1["Quality checks"]
+    N2["Security checks"]
+    N3["Governance checks"]
+    N4["Release gate"]
+    N5["Deploy"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+    N4 --> N5
+```
 
 Examples:
 
@@ -2306,15 +2427,18 @@ Check = evaluate. Gate = enforce progression based on the result.
 
 A useful progression is:
 
-Local tests
-   ↓
-Unit tests
-   ↓
-Integration tests
-   ↓
-Load tests
-   ↓
-Release confidence increases
+```mermaid
+flowchart TD
+    N0["Local tests"]
+    N1["Unit tests"]
+    N2["Integration tests"]
+    N3["Load tests"]
+    N4["Release confidence increases"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+```
 
 Local tests run on the developer machine before code reaches CI. They give the fastest feedback and can include unit tests, linting, formatting, or targeted checks.
 
@@ -2357,29 +2481,36 @@ Heavy load tests usually should not run against production on every PR.
 Run fast/cheap tests early; slower/more expensive tests later or on appropriate triggers.
 
 ### Implement tests in a pipeline, including configuring test tasks, configuring test agents, and integration of test results
+
 Previously:
 
-Developer
-   ↓
-pytest
-   ↓
-unit + integration tests
+```mermaid
+flowchart TD
+    N0["Developer"]
+    N1["pytest"]
+    N2["unit + integration tests"]
+    N0 --> N1
+    N1 --> N2
+```
 
 Now we want:
 
-Azure Pipeline
-   ↓
-Test agent
-   ↓
-Install dependencies
-   ↓
-Execute tests
-   ↓
-Generate test results
-   ↓
-Publish results to Azure DevOps
-   ↓
-Pass/fail pipeline
+```mermaid
+flowchart TD
+    N0["Azure Pipeline"]
+    N1["Test agent"]
+    N2["Install dependencies"]
+    N3["Execute tests"]
+    N4["Generate test results"]
+    N5["Publish results to Azure DevOps"]
+    N6["Pass/fail pipeline"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+    N4 --> N5
+    N5 --> N6
+```
 
 There are three pieces in the exam point.
 
@@ -2413,17 +2544,16 @@ pytest
 
 can fail the pipeline, but Azure DevOps gets much more useful information if pytest produces structured results:
 
-pytest
-   ↓
-JUnit XML
-   ↓
-PublishTestResults
-   ↓
-Azure DevOps Tests UI
-├── passed
-├── failed
-├── duration
-└── individual test results
+```mermaid
+flowchart TD
+    N0["pytest"]
+    N1["JUnit XML"]
+    N2["PublishTestResults"]
+    N3["Azure DevOps Tests UI<br/>├── passed<br/>├── failed<br/>├── duration<br/>└── individual test results"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+```
 
 That gives you reporting, history, troubleshooting information, and visibility beyond raw console logs. The broader principle is: choose the agent based on the test's execution requirements, not because one agent type is universally better.
 
@@ -2435,6 +2565,7 @@ Use condition: succeededOrFailed() so failed tests are still published and diagn
 An in-process Flask test client does not require a separately deployed API; a real external integration test would.
 
 ### Implement code coverage analysis
+
 For pipelines, the goal is to make coverage:
 
 generated automatically
@@ -2444,17 +2575,20 @@ optionally enforced with a threshold
 
 A typical flow is:
 
-Tests run
-   ↓
-Coverage tool collects data
-   ↓
-Coverage report generated
-   ↓
-Pipeline publishes report
-   ↓
-Azure DevOps shows coverage summary
-   ↓
-Optional gate blocks low coverage
+```mermaid
+flowchart TD
+    N0["Tests run"]
+    N1["Coverage tool collects data"]
+    N2["Coverage report generated"]
+    N3["Pipeline publishes report"]
+    N4["Azure DevOps shows coverage summary"]
+    N5["Optional gate blocks low coverage"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+    N4 --> N5
+```
 
 The key distinction is the same one you learned before:
 
@@ -2494,25 +2628,32 @@ Strong fit for enterprise deployment controls and Azure DevOps-integrated releas
 
 A useful exam shortcut is:
 
-GitHub-centric delivery
-repos + PRs + Actions
-        ↓
-GitHub Actions
+```mermaid
+flowchart TD
+    N0["GitHub-centric delivery<br/>repos + PRs + Actions"]
+    N1["GitHub Actions"]
+    N0 --> N1
+```
 
-Azure DevOps-centric delivery
-Boards + Repos + Artifacts + Environments
-        ↓
-Azure Pipelines
+```mermaid
+flowchart TD
+    N0["Azure DevOps-centric delivery<br/>Boards + Repos + Artifacts + Environments"]
+    N1["Azure Pipelines"]
+    N0 --> N1
+```
 
 But this is not a hard rule. Hybrid setups are valid.
 
 For example:
 
-GitHub repo
-   ↓
-Azure Pipelines
-   ↓
-Azure deployment
+```mermaid
+flowchart TD
+    N0["GitHub repo"]
+    N1["Azure Pipelines"]
+    N2["Azure deployment"]
+    N0 --> N1
+    N1 --> N2
+```
 
 is perfectly reasonable if the organization standardizes CI/CD and governance in Azure DevOps.
 
@@ -2535,6 +2676,7 @@ needs: expresses job dependencies in GitHub Actions.
 Choose based on the broader delivery ecosystem and requirements—not simply where the repository lives.
 
 ### Design and implement a GitHub runner or Azure DevOps agent infrastructure, including cost, tool selection, licenses, connectivity, and maintainability
+
 Terminology first:
 
 GitHub Actions   → runner
@@ -2666,17 +2808,20 @@ Self-hosted infrastructure gives control, but that control must be paired with r
 
 The basic architecture is:
 
-GitHub repository
-   ↓
-Azure Pipelines integration
-   ↓
-Pipeline triggered by push / PR
-   ↓
-Azure Pipelines checks out GitHub source
-   ↓
-Build / test / deploy
-   ↓
-Status shown back in GitHub
+```mermaid
+flowchart TD
+    N0["GitHub repository"]
+    N1["Azure Pipelines integration"]
+    N2["Pipeline triggered by push / PR"]
+    N3["Azure Pipelines checks out GitHub source"]
+    N4["Build / test / deploy"]
+    N5["Status shown back in GitHub"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+    N4 --> N5
+```
 
 Azure Pipelines needs permission to do two things:
 
@@ -2729,17 +2874,20 @@ Pipeline creates the check; repository policy enforces the check.
 
 That gives you the full integration loop:
 
-GitHub PR
-   ↓
-Azure Pipelines
-   ↓
-Build/test/gates
-   ↓
-Status returned to GitHub
-   ↓
-GitHub ruleset
-   ↓
-Merge allowed or blocked
+```mermaid
+flowchart TD
+    N0["GitHub PR"]
+    N1["Azure Pipelines"]
+    N2["Build/test/gates"]
+    N3["Status returned to GitHub"]
+    N4["GitHub ruleset"]
+    N5["Merge allowed or blocked"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+    N4 --> N5
+```
 
 ### Develop and implement pipeline trigger rules
 
@@ -2788,6 +2936,7 @@ If a pipeline only builds the backend, it usually shouldn't run when only /docs 
 - Condition ≠ trigger → conditions control stages/jobs/steps after a pipeline has started.
 
 ### Develop pipelines by using YAML
+
 A useful Azure Pipelines hierarchy is:
 
 Pipeline
@@ -2806,11 +2955,14 @@ Pipeline
 
 The hierarchy is:
 
-stages
-  ↓
-jobs
-  ↓
-steps
+```mermaid
+flowchart TD
+    N0["stages"]
+    N1["jobs"]
+    N2["steps"]
+    N0 --> N1
+    N1 --> N2
+```
 
 A step is an individual operation, such as:
 
@@ -2840,11 +2992,14 @@ dependsOn:
 
 For example:
 
-Build
-  ↓
-Test
-  ↓
-Deploy
+```mermaid
+flowchart TD
+    N0["Build"]
+    N1["Test"]
+    N2["Deploy"]
+    N0 --> N1
+    N1 --> N2
+```
 
 could be explicitly represented as:
 
@@ -2857,10 +3012,11 @@ could be explicitly represented as:
 But dependencies aren't always linear.
 
 You might want:
-
-            ┌→ UnitTests
-Build ──────┤
-            └→ IntegrationTests
+```mermaid
+flowchart LR
+    B["Build"] --> U["UnitTests"]
+    B --> I["IntegrationTests"]
+```
 
 where independent jobs can execute in parallel.
 
@@ -2904,6 +3060,7 @@ are not simply two spellings of the same mechanism.
 - A deployment condition should usually include success logic too, not just environment == prod.
 
 ### Design and implement a strategy for job execution order, including parallelism and multi-stage pipelines
+
 The key rule in GitHub Actions is:
 
 Jobs run in parallel by default unless you create dependencies with needs:.
@@ -2918,11 +3075,11 @@ jobs:
     runs-on: ubuntu-latest
 
 means:
-
-unit-tests ──────►
-                  running in parallel
-security-scan ──►
-
+```mermaid
+flowchart LR
+    U["unit-tests"] --> R["running in parallel"]
+    S["security-scan"] --> R
+```
 But:
 
 jobs:
@@ -2935,15 +3092,19 @@ jobs:
 
 means:
 
-Build
-  ↓
-Test
+```mermaid
+flowchart TD
+    N0["Build"]
+    N1["Test"]
+    N0 --> N1
+```
 
 And needs can contain several jobs, which lets you create a fan-out/fan-in graph:
-
-             ┌→ Unit Tests ──────┐
-Build ───────┤                    ├→ Deploy
-             └→ Security Scan ───┘
+```mermaid
+flowchart LR
+    B["Build"] --> U["Unit Tests"] --> D["Deploy"]
+    B --> S["Security Scan"] --> D
+```
 deploy:
   needs:
     - unit-tests
@@ -2978,11 +3139,13 @@ Python 3.13
 Instead of manually defining four jobs, GitHub Actions can use a matrix strategy. GitHub creates a job for each matrix combination and runs them in parallel subject to runner availability.
 
 Conceptually:
-
-                  ┌→ Python 3.10
-                  ├→ Python 3.11
-Test matrix ──────┼→ Python 3.12
-                  └→ Python 3.13
+```mermaid
+flowchart LR
+    M["Test matrix"] --> P310["Python 3.10"]
+    M --> P311["Python 3.11"]
+    M --> P312["Python 3.12"]
+    M --> P313["Python 3.13"]
+```
 
 That's particularly useful for cross-platform or multi-runtime testing.
 
@@ -3002,13 +3165,16 @@ needs: test waits for the entire test matrix.
 
 
 ### Develop and implement complex pipeline scenarios, such as hybrid pipelines, VM templates, and self-hosted runners or agents
+
 A complex pipeline often doesn't use one execution model everywhere. Different jobs have different requirements:
 
-                 ┌→ Hosted agent → Build
-GitHub/Azure ────┤
-                 └→ Self-hosted agent → Private integration test
-                                           ↓
-                                    Production deployment
+```mermaid
+flowchart TD
+    G["GitHub/Azure"] --> H["Hosted agent"] --> B["Build"]
+    G --> S["Self-hosted agent"] --> I["Private integration test"]
+    B --> P["Production deployment"]
+    I --> P
+```
 
 That's a hybrid pipeline: different execution environments participate in one delivery flow.
 
@@ -3032,15 +3198,16 @@ Putting everything on Microsoft-hosted agents may not work because the private r
 
 A stronger design could therefore be:
 
-Microsoft-hosted
-Build + unit tests
-        ↓
-Artifact
-        ↓
-Self-hosted
-Integration tests
-        ↓
-Self-hosted / controlled deployment
+```mermaid
+flowchart TD
+    N0["Microsoft-hosted<br/>Build + unit tests"]
+    N1["Artifact"]
+    N2["Self-hosted<br/>Integration tests"]
+    N3["Self-hosted / controlled deployment"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+```
 
 This follows a useful principle:
 
@@ -3058,40 +3225,44 @@ Manually creating self-hosted agents doesn't scale well.
 
 Instead, define a repeatable machine baseline:
 
-Version-controlled definition
-├── OS
-├── required tools
-├── agent prerequisites
-├── security configuration
-└── versions
-        ↓
-Build VM/image
-        ↓
-Create agents consistently
+```mermaid
+flowchart TD
+    N0["Version-controlled definition<br/>├── OS<br/>├── required tools<br/>├── agent prerequisites<br/>├── security configuration<br/>└── versions"]
+    N1["Build VM/image"]
+    N2["Create agents consistently"]
+    N0 --> N1
+    N1 --> N2
+```
 
 Depending on the architecture, this might involve VM images, image-building tooling, infrastructure as code, VM Scale Sets, or equivalent runner infrastructure.
 
 This also enables ephemeral agents:
 
-Known image
-   ↓
-Create agent
-   ↓
-Run job
-   ↓
-Destroy agent
+```mermaid
+flowchart TD
+    N0["Known image"]
+    N1["Create agent"]
+    N2["Run job"]
+    N3["Destroy agent"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+```
 
 rather than:
 
-Agent VM
-↓
-job
-↓
-job
-↓
-job
-↓
-six months of accumulated state...
+```mermaid
+flowchart TD
+    N0["Agent VM"]
+    N1["job"]
+    N2["job"]
+    N3["job"]
+    N4["six months of accumulated state..."]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+```
 
 Ephemeral execution improves isolation and reduces configuration drift, though it adds provisioning/image-management considerations.
 
@@ -3109,6 +3280,7 @@ Ephemeral agents improve isolation further, but they don't eliminate maintenance
 Use the least specialized execution environment that satisfies the job’s requirements.
 
 ### Create reusable pipeline elements, including YAML templates, task groups, variables, and variable groups
+
 The four concepts are:
 
 YAML templates → reusable pipeline structure or steps.
@@ -3195,22 +3367,21 @@ Parameters configure reusable pipeline logic; variables provide values to execut
 
 
 ### Design and implement checks and approvals by using YAML-based environments
+
 The architecture is:
 
-YAML pipeline
-    ↓
-deployment job
-    ↓
-environment: production
-    ↓
-Environment checks
-├── approvals
-├── branch control
-├── business hours
-├── exclusive lock
-└── other configured checks
-    ↓
-deployment allowed
+```mermaid
+flowchart TD
+    N0["YAML pipeline"]
+    N1["deployment job"]
+    N2["environment: production"]
+    N3["Environment checks<br/>├── approvals<br/>├── branch control<br/>├── business hours<br/>├── exclusive lock<br/>└── other configured checks"]
+    N4["deployment allowed"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+```
 
 The important distinction is that the YAML targets the environment, but approvals/checks are generally configured on the protected resource in Azure DevOps rather than being defined by the application pipeline YAML itself. This separation prevents someone who can edit pipeline YAML from simply removing a production approval.
 
@@ -3256,13 +3427,14 @@ could stop the stage from running for a feature branch.
 
 An environment approval could require:
 
-Production deployment reached
-        ↓
-Approval required
-        ↓
-Authorized approver
-   ├─ Reject → stop
-   └─ Approve → continue
+```mermaid
+flowchart TD
+    N0["Production deployment reached"]
+    N1["Approval required"]
+    N2["Authorized approver<br/>├─ Reject → stop<br/>└─ Approve → continue"]
+    N0 --> N1
+    N1 --> N2
+```
 
 These mechanisms complement each other rather than replacing one another.
 
@@ -3271,16 +3443,18 @@ Checks
 Azure DevOps environments support checks such as approvals, branch control, business hours, REST/Azure Function checks, Azure Monitor alert checks, and exclusive locks. Checks are evaluated before a stage consuming the protected resource can proceed.
 
 For example, an exclusive lock addresses:
-
-Pipeline A ─┐
-            ├→ production
-Pipeline B ─┘
+```mermaid
+flowchart LR
+    A["Pipeline A"] --> P["production"]
+    B["Pipeline B"] --> P
+```
 
 when you don't want two deployments modifying production simultaneously.
 
 ## Design and implement deployments
 
 ### Design a deployment strategy, including blue-green, canary, ring, progressive exposure, feature flags, and A/B testing
+
 The strategies differ mainly in how much traffic/user exposure the new version gets, how quickly that exposure grows, and how rollback works.
 
 A useful map is:
@@ -3433,13 +3607,17 @@ Release
 - Progressive rollout should be driven by telemetry and thresholds, not merely by waiting a fixed amount of time.
 
 ### Design a pipeline to ensure that dependency deployments are reliably ordered
+
 Think:
 
-Database schema
-   ↓
-Backend API
-   ↓
-Frontend
+```mermaid
+flowchart TD
+    N0["Database schema"]
+    N1["Backend API"]
+    N2["Frontend"]
+    N0 --> N1
+    N1 --> N2
+```
 
 If the frontend depends on a new backend API, and the backend depends on a new database schema, deploying them in the wrong order can break the application even if every individual deployment succeeds.
 
@@ -3449,11 +3627,14 @@ Model real deployment dependencies explicitly instead of relying on timing or YA
 
 For example:
 
-DeployDatabase
-      ↓
-DeployBackend
-      ↓
-DeployFrontend
+```mermaid
+flowchart TD
+    N0["DeployDatabase"]
+    N1["DeployBackend"]
+    N2["DeployFrontend"]
+    N0 --> N1
+    N1 --> N2
+```
 
 In Azure Pipelines this can be modeled with stage dependencies such as dependsOn. In GitHub Actions you'd use needs: between jobs.
 
@@ -3467,15 +3648,18 @@ But ordering alone isn't enough. A reliable dependency deployment strategy shoul
 
 A stronger flow is therefore:
 
-Deploy DB
-   ↓
-Validate DB migration
-   ↓
-Deploy API
-   ↓
-Health check API
-   ↓
-Deploy frontend
+```mermaid
+flowchart TD
+    N0["Deploy DB"]
+    N1["Validate DB migration"]
+    N2["Deploy API"]
+    N3["Health check API"]
+    N4["Deploy frontend"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+```
 
 Compatibility is important
 
@@ -3483,19 +3667,25 @@ Suppose version 2 of the backend requires a database column that doesn't exist y
 
 This is unsafe:
 
-Backend v2
-   ↓
-Database migration
+```mermaid
+flowchart TD
+    N0["Backend v2"]
+    N1["Database migration"]
+    N0 --> N1
+```
 
 because there is a period where the new backend can hit the old schema.
 
 A safer strategy is often:
 
-Backward-compatible DB change
-   ↓
-Backend v2 deployed
-   ↓
-Old schema removed later
+```mermaid
+flowchart TD
+    N0["Backward-compatible DB change"]
+    N1["Backend v2 deployed"]
+    N2["Old schema removed later"]
+    N0 --> N1
+    N1 --> N2
+```
 
 This is sometimes called an expand-and-contract style migration.
 
@@ -3527,12 +3717,12 @@ Imagine three application instances:
 
 If App A is being updated, a good deployment process can take it out of rotation:
 
-Traffic
-  ↓
-Load balancer
-  ├─ App A → updating, no traffic
-  ├─ App B → serving
-  └─ App C → serving
+```mermaid
+flowchart TD
+    N0["Traffic"]
+    N1["Load balancer<br/>├─ App A → updating, no traffic<br/>├─ App B → serving<br/>└─ App C → serving"]
+    N0 --> N1
+```
 
 Once A is healthy again, it rejoins the pool.
 
@@ -3550,13 +3740,19 @@ you do something like:
 
 10 × v1
 
-Update 2
-↓
-8 × v1 + 2 × v2
+```mermaid
+flowchart TD
+    N0["Update 2"]
+    N1["8 × v1 + 2 × v2"]
+    N0 --> N1
+```
 
-Update next 2
-↓
-6 × v1 + 4 × v2
+```mermaid
+flowchart TD
+    N0["Update next 2"]
+    N1["6 × v1 + 4 × v2"]
+    N0 --> N1
+```
 
 ...
 
@@ -3575,17 +3771,20 @@ Staging slot    → v2
 
 You deploy v2 to staging first:
 
-Deploy v2
-   ↓
-Staging slot
-   ↓
-Warm up
-   ↓
-Smoke/integration tests
-   ↓
-Swap
-   ↓
-Production now serves v2
+```mermaid
+flowchart TD
+    N0["Deploy v2"]
+    N1["Staging slot"]
+    N2["Warm up"]
+    N3["Smoke/integration tests"]
+    N4["Swap"]
+    N5["Production now serves v2"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+    N4 --> N5
+```
 
 That reduces cold-start and deployment downtime because the new version is already running before traffic is switched.
 
@@ -3601,6 +3800,7 @@ One important exam nuance is slot settings. Some configuration values should sta
 - Deployment slots require an App Service tier that supports them.
 
 ### Design a hotfix path plan for responding to high-priority code fixes
+
 A hotfix path is a deliberately shortened but still controlled route for urgent production fixes.
 
 The goal is:
@@ -3609,33 +3809,39 @@ Reduce time-to-recovery without throwing away traceability, validation, or gover
 
 A normal path might be:
 
-feature branch
-   ↓
-full PR workflow
-   ↓
-all tests
-   ↓
-staging
-   ↓
-scheduled release
-   ↓
-production
+```mermaid
+flowchart TD
+    N0["feature branch"]
+    N1["full PR workflow"]
+    N2["all tests"]
+    N3["staging"]
+    N4["scheduled release"]
+    N5["production"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+    N4 --> N5
+```
 
 A hotfix path may instead be:
 
-production issue
-   ↓
-hotfix branch from production version
-   ↓
-targeted fix
-   ↓
-fast CI + critical security/tests
-   ↓
-expedited approval
-   ↓
-production
-   ↓
-merge fix back to main/release branches
+```mermaid
+flowchart TD
+    N0["production issue"]
+    N1["hotfix branch from production version"]
+    N2["targeted fix"]
+    N3["fast CI + critical security/tests"]
+    N4["expedited approval"]
+    N5["production"]
+    N6["merge fix back to main/release branches"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+    N4 --> N5
+    N5 --> N6
+```
 
 The important point is that hotfix does not mean bypass everything. You usually keep the controls that matter most:
 - source traceability
@@ -3654,9 +3860,12 @@ So a safer model is:
 
 main → v3 development
 
-v2.4.1 tag/release branch
-        ↓
-    hotfix/2.4.2
+```mermaid
+flowchart TD
+    N0["v2.4.1 tag/release branch"]
+    N1["hotfix/2.4.2"]
+    N0 --> N1
+```
 
 Then after release, the fix should be propagated forward so it isn't lost from future versions.
 
@@ -3687,19 +3896,23 @@ to propagate the targeted fix forward.
 Rollback plans must account for stateful dependencies such as databases, not just application binaries.
 
 ### Design and implement a resiliency strategy for deployment
+
 A resilient deployment pipeline should handle expected failures safely instead of assuming every deployment operation succeeds on the first attempt.
 
 Think about failures such as:
 
-Deployment pipeline
-   ↓
-Azure API call → transient timeout
-   ↓
-Health check → temporary failure
-   ↓
-Deployment interrupted halfway
-   ↓
-What happens now?
+```mermaid
+flowchart TD
+    N0["Deployment pipeline"]
+    N1["Azure API call → transient timeout"]
+    N2["Health check → temporary failure"]
+    N3["Deployment interrupted halfway"]
+    N4["What happens now?"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+```
 
 A resiliency strategy usually combines several mechanisms:
 
@@ -3754,15 +3967,18 @@ Retries
 
 Retries are useful for transient failures:
 
-Azure API
-   ↓
-HTTP 503
-   ↓
-wait
-   ↓
-retry
-   ↓
-success
+```mermaid
+flowchart TD
+    N0["Azure API"]
+    N1["HTTP 503"]
+    N2["wait"]
+    N3["retry"]
+    N4["success"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+```
 
 But retries aren't appropriate for every failure.
 
@@ -3774,15 +3990,14 @@ Running those 20 more times probably won't help.
 
 A common approach is retry with backoff:
 
-attempt 1
-   ↓ fail
-wait 2s
-   ↓
-attempt 2
-   ↓ fail
-wait 4s
-   ↓
-attempt 3
+```mermaid
+flowchart TD
+    N0["attempt 1<br/>↓ fail<br/>wait 2s"]
+    N1["attempt 2<br/>↓ fail<br/>wait 4s"]
+    N2["attempt 3"]
+    N0 --> N1
+    N1 --> N2
+```
 
 This avoids hammering a struggling dependency.
 
@@ -3792,9 +4007,12 @@ You've already practiced passing artifacts between stages. For resiliency, the i
 
 If production fails:
 
-v43 ❌
- ↓
-redeploy v42
+```mermaid
+flowchart TD
+    N0["v43 ❌"]
+    N1["redeploy v42"]
+    N0 --> N1
+```
 
 you want the exact previously validated v42, not:
 
@@ -3821,21 +4039,23 @@ Build once, version the artifact, promote that exact artifact, retain known-good
 
 
 ### Implement feature flags by using Azure App Configuration Feature Manager
+
 Now the new objective is specifically implementing them with Azure App Configuration Feature Management.
 
 The architecture is roughly:
 
-Application
-     ↓
-Azure App Configuration
-     ↓
-Feature flag: BetaCheckout
-├── Disabled
-└── Enabled
-     ↓
-Feature Manager in application
-     ↓
-Old or new behavior
+```mermaid
+flowchart TD
+    N0["Application"]
+    N1["Azure App Configuration"]
+    N2["Feature flag: BetaCheckout<br/>├── Disabled<br/>└── Enabled"]
+    N3["Feature Manager in application"]
+    N4["Old or new behavior"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+```
 
 Instead of hard-coding:
 
@@ -3855,12 +4075,12 @@ But feature management becomes more useful when you add filters.
 
 For example:
 
-BetaCheckout
-   ↓
-Targeting
-├── Group: employees
-├── User: test-user
-└── Percentage rollout
+```mermaid
+flowchart TD
+    N0["BetaCheckout"]
+    N1["Targeting<br/>├── Group: employees<br/>├── User: test-user<br/>└── Percentage rollout"]
+    N0 --> N1
+```
 
 This connects directly to the progressive-exposure strategy you just studied.
 
@@ -3876,14 +4096,14 @@ Filters can determine whether the feature is enabled for the current context.
 
 For example, percentage-based rollout:
 
-BetaCheckout
-5% users
-   ↓ telemetry good
-25%
-   ↓
-50%
-   ↓
-100%
+```mermaid
+flowchart TD
+    N0["BetaCheckout<br/>5% users<br/>↓ telemetry good<br/>25%"]
+    N1["50%"]
+    N2["100%"]
+    N0 --> N1
+    N1 --> N2
+```
 
 Or targeting:
 
@@ -3910,13 +4130,16 @@ Operational advantage
 
 A major advantage is that changing a flag doesn't inherently require rebuilding and redeploying the application.
 
-Code already deployed
-      ↓
-BetaCheckout OFF
-      ↓
-change flag
-      ↓
-BetaCheckout ON
+```mermaid
+flowchart TD
+    N0["Code already deployed"]
+    N1["BetaCheckout OFF"]
+    N2["change flag"]
+    N3["BetaCheckout ON"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+```
 
 Depending on the application's configuration refresh behavior, it can pick up updated feature state without a new application deployment.
 
@@ -3945,6 +4168,7 @@ BetaCheckout
 - Avoid hard-coded access keys; prefer identity-based authentication such as DefaultAzureCredential.
 
 ### Implement application deployment by using containers, binaries, and scripts
+
 This objective is about the form your deployable application takes and how the pipeline delivers it.
 
 You've already worked extensively with artifacts, so we won't repeat build/publish/download fundamentals. The new distinction is between three deployment approaches:
@@ -3961,17 +4185,20 @@ Container deployment
 
 With containers, the pipeline normally builds once:
 
-Source
-  ↓
-docker build
-  ↓
-Image: orders-api:1.4.7
-  ↓
-Container registry
-  ↓
-Deploy that image
-  ↓
-App Service / AKS / Container Apps
+```mermaid
+flowchart TD
+    N0["Source"]
+    N1["docker build"]
+    N2["Image: orders-api:1.4.7"]
+    N3["Container registry"]
+    N4["Deploy that image"]
+    N5["App Service / AKS / Container Apps"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+    N4 --> N5
+```
 
 The important principle is again build once, promote the same artifact.
 
@@ -3982,11 +4209,12 @@ Test → rebuild image
 Prod → rebuild image
 
 Instead:
-
-orders-api:1.4.7
-  ├→ Test
-  ├→ Staging
-  └→ Production
+```mermaid
+flowchart LR
+    A["orders-api:1.4.7"] --> T["Test"]
+    A --> S["Staging"]
+    A --> P["Production"]
+```
 
 A container bundles the application and its runtime dependencies into a consistent deployable unit.
 
@@ -4002,15 +4230,18 @@ The pipeline can deploy that package directly to something such as Azure App Ser
 
 The flow becomes:
 
-Build
-  ↓
-orders-api.zip
-  ↓
-Pipeline artifact
-  ↓
-Deployment task
-  ↓
-App Service
+```mermaid
+flowchart TD
+    N0["Build"]
+    N1["orders-api.zip"]
+    N2["Pipeline artifact"]
+    N3["Deployment task"]
+    N4["App Service"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+```
 
 Again, the binary should be produced during build, not rebuilt during production deployment.
 
@@ -4076,13 +4307,15 @@ And they aren't mutually exclusive. A pipeline might deploy a container and then
 - Scripts should also be idempotent and handle authentication/secrets safely.
 
 ### Implement a deployment that includes database tasks
+
 A deployment that includes a database often needs to coordinate:
 
-Application artifact
-      +
-Database migration/schema change
-      ↓
-Deployment pipeline
+```mermaid
+flowchart TD
+    N0["Application artifact<br/>+<br/>Database migration/schema change"]
+    N1["Deployment pipeline"]
+    N0 --> N1
+```
 
 Typical database tasks include:
 
@@ -4100,17 +4333,20 @@ Database changes are stateful, so they need more care than replacing stateless a
 
 A safer pattern is often:
 
-Backup/recovery readiness
-        ↓
-Apply backward-compatible DB change
-        ↓
-Validate migration
-        ↓
-Deploy application
-        ↓
-Smoke/integration test
-        ↓
-Remove obsolete schema later
+```mermaid
+flowchart TD
+    N0["Backup/recovery readiness"]
+    N1["Apply backward-compatible DB change"]
+    N2["Validate migration"]
+    N3["Deploy application"]
+    N4["Smoke/integration test"]
+    N5["Remove obsolete schema later"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+    N4 --> N5
+```
 
 That last part is the expand-and-contract idea you already touched on: add compatible schema first, deploy code that can use it, then remove old schema only after old application versions are gone.
 
@@ -4145,6 +4381,7 @@ dependsOn guarantees execution order, but it does not guarantee shared local fil
 ## Design and implement infrastructure as code (IaC)
 
 ### Recommend a configuration management technology for application infrastructure
+
 A useful starting distinction is:
 
 Infrastructure provisioning
@@ -4201,15 +4438,14 @@ Bicep
 
 Bicep is particularly appropriate when the infrastructure is Azure-focused:
 
-Bicep
-  ↓
-Azure Resource Manager
-  ↓
-Resource Group
-├── App Service
-├── Storage
-├── Key Vault
-└── App Configuration
+```mermaid
+flowchart TD
+    N0["Bicep"]
+    N1["Azure Resource Manager"]
+    N2["Resource Group<br/>├── App Service<br/>├── Storage<br/>├── Key Vault<br/>└── App Configuration"]
+    N0 --> N1
+    N1 --> N2
+```
 
 Advantages include Azure-native resource support, declarative syntax, dependency handling, modules, and no separate infrastructure-state file to manage.
 
@@ -4238,13 +4474,12 @@ Ansible
 
 Ansible becomes particularly interesting when the requirement is about configuring systems:
 
-VM already exists
-   ↓
-Install nginx
-Configure files
-Create users
-Configure service
-Start service
+```mermaid
+flowchart TD
+    N0["VM already exists"]
+    N1["Install nginx<br/>Configure files<br/>Create users<br/>Configure service<br/>Start service"]
+    N0 --> N1
+```
 
 It is agentless in common usage and typically connects remotely to managed machines.
 
@@ -4289,6 +4524,7 @@ For “Recommend a configuration management technology for application infrastru
 
 
 ### Define an IaC strategy, including source control and automation of testing and deployment
+
 This point moves from choosing a configuration management technology to actually designing how it will be implemented and operated.
 
 The key question becomes:
@@ -4309,19 +4545,22 @@ A good configuration management strategy usually includes:
 
 You can think of it as:
 
-Configuration code
-      ↓
-Version control
-      ↓
-PR / validation
-      ↓
-Pipeline
-      ↓
-Apply desired configuration
-      ↓
-Validate result
-      ↓
-Detect/remediate drift
+```mermaid
+flowchart TD
+    N0["Configuration code"]
+    N1["Version control"]
+    N2["PR / validation"]
+    N3["Pipeline"]
+    N4["Apply desired configuration"]
+    N5["Validate result"]
+    N6["Detect/remediate drift"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+    N4 --> N5
+    N5 --> N6
+```
 
 The implementation pattern changes depending on the tool.
 
@@ -4368,6 +4607,7 @@ That is why configuration management tools are generally stronger than long chai
 
 
 ### Design and implement desired state configuration for environments, including Azure Automation State Configuration, Azure Resource Manager, Bicep, and Azure Machine Configuration
+
 This objective ties together two different layers of desired state:
 
 Azure environment
@@ -4415,20 +4655,25 @@ Bicep is essentially a more concise authoring language for Azure Resource Manage
 
 Think:
 
-Bicep source
-    ↓
-ARM deployment
-    ↓
-Azure resources
-Azure Machine Configuration
+```mermaid
+flowchart TD
+    N0["Bicep source"]
+    N1["ARM deployment"]
+    N2["Azure resources<br/>Azure Machine Configuration"]
+    N0 --> N1
+    N1 --> N2
+```
 
 Here's the important new part.
 
 Suppose Bicep creates a VM successfully:
 
-Bicep
- ↓
-VM exists ✅
+```mermaid
+flowchart TD
+    N0["Bicep"]
+    N1["VM exists ✅"]
+    N0 --> N1
+```
 
 That doesn't necessarily answer:
 
@@ -4455,15 +4700,18 @@ Azure Automation State Configuration historically provided a managed Azure imple
 
 Conceptually:
 
-PowerShell DSC configuration
-        ↓
-Azure Automation
-        ↓
-compiled node configuration
-        ↓
-registered nodes
-        ↓
-desired state
+```mermaid
+flowchart TD
+    N0["PowerShell DSC configuration"]
+    N1["Azure Automation"]
+    N2["compiled node configuration"]
+    N3["registered nodes"]
+    N4["desired state"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+```
 
 However, this is where current knowledge matters: Azure Automation State Configuration was retired on September 30, 2025. Microsoft directs customers toward Azure Machine Configuration.
 
@@ -4487,29 +4735,36 @@ Azure Machine Configuration
 - For new guest-configuration designs, favor Azure Machine Configuration over retired Azure Automation State Configuration.
 
 ### Design and implement Azure Deployment Environments for on-demand self-deployment
+
 This objective introduces Azure Deployment Environments (ADE). The important idea is controlled developer self-service.
 
 Instead of developers filing tickets:
 
-Developer
-   ↓
-"Please create my test environment"
-   ↓
-Platform team
-   ↓
-manually provision resources
+```mermaid
+flowchart TD
+    N0["Developer"]
+    N1["&quot;Please create my test environment&quot;"]
+    N2["Platform team"]
+    N3["manually provision resources"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+```
 
 the platform team defines approved environment templates, and developers provision environments themselves:
 
-Platform team
-   ↓
-approved IaC definitions
-   ↓
-ADE catalog
-   ↓
-Developer self-service
-   ↓
-Dev/Test/Sandbox environment
+```mermaid
+flowchart TD
+    N0["Platform team"]
+    N1["approved IaC definitions"]
+    N2["ADE catalog"]
+    N3["Developer self-service"]
+    N4["Dev/Test/Sandbox environment"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+```
 
 This connects strongly to your earlier subscription-vending/platform thinking: the platform team defines the guardrails, while consumers get self-service within those boundaries.
 
@@ -4517,13 +4772,16 @@ Core ADE hierarchy
 
 There are several objects to distinguish:
 
-Dev Center
-   ↓
-Project
-   ↓
-Environment
-   ↓
-Azure resources
+```mermaid
+flowchart TD
+    N0["Dev Center"]
+    N1["Project"]
+    N2["Environment"]
+    N3["Azure resources"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+```
 
 Dev Center is the organizational/platform-level resource. It centralizes things such as catalogs and environment types.
 
@@ -4533,20 +4791,16 @@ Environment is an actual deployed instance requested by a developer.
 
 For example:
 
-Dev Center: ContosoEngineering
-│
-├── Catalog
-│   ├── WebApp
-│   └── ThreeTierApp
-│
-└── Project: Orders
-       ↓
-   Developer requests WebApp
-       ↓
-   Environment: matt-dev
-       ↓
-   actual Azure resources
-Catalogs and environment definitions
+```mermaid
+flowchart TD
+    N0["Dev Center: ContosoEngineering<br/>│<br/>├── Catalog<br/>│   ├── WebApp<br/>│   └── ThreeTierApp<br/>│<br/>└── Project: Orders"]
+    N1["Developer requests WebApp"]
+    N2["Environment: matt-dev"]
+    N3["actual Azure resources<br/>Catalogs and environment definitions"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+```
 
 The platform team provides environment definitions through catalogs.
 
@@ -4554,15 +4808,14 @@ An environment definition contains IaC describing an approved environment. ADE s
 
 Conceptually:
 
-Git repository
-└── environments/
-    └── webapp/
-        ├── manifest
-        └── IaC files
-             ↓
-          ADE Catalog
-             ↓
-     WebApp definition available
+```mermaid
+flowchart TD
+    N0["Git repository<br/>└── environments/<br/>└── webapp/<br/>├── manifest<br/>└── IaC files"]
+    N1["ADE Catalog"]
+    N2["WebApp definition available"]
+    N0 --> N1
+    N1 --> N2
+```
 
 This gives developers choices without giving them unrestricted infrastructure creation.
 
@@ -4638,6 +4891,7 @@ This is especially useful for ephemeral development/test environments.
 ## Maintain pipelines
 
 ### Monitor pipeline health, including failure rate, duration, and flaky tests
+
 A pipeline being green right now doesn't necessarily mean it's healthy. Pipeline health is about behavior over time.
 
 The three metrics explicitly called out in this objective are:
@@ -4758,6 +5012,7 @@ So for this objective, a useful troubleshooting order is:
 - Inconsistent tests on unchanged code → investigate flakiness.
 
 ### Optimize a pipeline for cost, time, performance, and reliability
+
 Now the question is:
 
 How do we improve it without sacrificing reliability?
@@ -4785,10 +5040,12 @@ Sequential    33m
 If unit tests, integration tests, and security scanning don't depend on one another, running them sequentially wastes time.
 
 You could use:
-
-              ┌→ Unit tests ──────┐
-Build ────────┼→ Integration ─────┼→ Deploy
-              └→ Security scan ───┘
+```mermaid
+flowchart LR
+    B["Build"] --> U["Unit tests"] --> D["Deploy"]
+    B --> I["Integration"] --> D
+    B --> S["Security scan"] --> D
+```
 
 Now pipeline duration is closer to the longest parallel path, rather than their sum.
 
@@ -4813,23 +5070,32 @@ The important exam trap is the cache key. If dependencies change, you need the c
 
 For example:
 
-requirements.txt changes
-        ↓
-cache key changes
-        ↓
-new dependencies restored
+```mermaid
+flowchart TD
+    N0["requirements.txt changes"]
+    N1["cache key changes"]
+    N2["new dependencies restored"]
+    N0 --> N1
+    N1 --> N2
+```
 
 A stale cache shouldn't cause the pipeline to use incorrect dependencies.
 
 Artifacts: build once
 
 This should now be familiar:
-uild once
-   ↓
-immutable artifact
-   ├→ Test
-   ├→ Staging
-   └→ Production
+```mermaid
+flowchart TD
+    N0["uild once"]
+    N1["immutable artifact"]
+    N2["Test"]
+    N3["Staging"]
+    N4["Production"]
+    N0 --> N1
+    N1 --> N2
+    N1 --> N3
+    N1 --> N4
+```
 
 This improves several dimensions simultaneously:
 
@@ -4948,6 +5214,7 @@ Separate job
 investigate dependency caching
 
 ### Optimize pipeline concurrency for performance and cost
+
 The new focus is specifically how much pipeline work should execute concurrently and how concurrency affects throughput, queue time, agent capacity, and cost.
 
 Parallelism vs concurrency
@@ -4961,10 +5228,12 @@ Concurrency
 → how much pipeline work the organization can execute simultaneously
 
 For example, one pipeline could fan out:
-
-             ┌→ UnitTests
-Build ───────┼→ Security
-             └→ Integration
+```mermaid
+flowchart LR
+    B["Build"] --> U["UnitTests"]
+    B --> S["Security"]
+    B --> I["Integration"]
+```
 
 That needs up to three concurrent execution slots/agents for those jobs to actually run simultaneously.
 
@@ -5033,12 +5302,12 @@ only 2 jobs can actually execute simultaneously
 
 So distinguish:
 
-Concurrency entitlement/capacity
-            +
-available agents
-            ↓
-effective concurrency
-Cost trade-off
+```mermaid
+flowchart TD
+    N0["Concurrency entitlement/capacity<br/>+<br/>available agents"]
+    N1["effective concurrency<br/>Cost trade-off"]
+    N0 --> N1
+```
 
 Increasing concurrency can reduce:
 
@@ -5067,6 +5336,7 @@ Running 20 integration jobs simultaneously against one shared test database migh
 That difference between wall-clock performance and resource consumption/cost is central to optimizing pipeline concurrency.
 
 ### Design and implement a retention strategy for pipeline artifacts and dependencies
+
 You've already used the principle:
 
 Build once → promote the same immutable artifact.
@@ -5121,17 +5391,23 @@ You deploy v4.3, discover a severe issue, and decide to roll back.
 
 The safest path is generally:
 
-retrieve retained, previously validated v4.2 artifact
-        ↓
-redeploy v4.2
+```mermaid
+flowchart TD
+    N0["retrieve retained, previously validated v4.2 artifact"]
+    N1["redeploy v4.2"]
+    N0 --> N1
+```
 
 not:
 
-checkout old commit
-        ↓
-rebuild v4.2 today
-        ↓
-hope dependencies/tooling produce identical output
+```mermaid
+flowchart TD
+    N0["checkout old commit"]
+    N1["rebuild v4.2 today"]
+    N2["hope dependencies/tooling produce identical output"]
+    N0 --> N1
+    N1 --> N2
+```
 
 This connects directly to your container digest work.
 
@@ -5213,6 +5489,7 @@ The shopping list tells you exactly what you need, but doesn't guarantee the war
 - For rollback, prefer the previously validated immutable artifact rather than rebuilding an old commit.
 
 ### Migrate a pipeline from classic to YAML in Azure Pipelines
+
 The starting distinction is:
 
 Classic pipeline
@@ -5281,13 +5558,16 @@ Classic releases → multistage YAML
 
 A Classic release might look like:
 
-Build artifact
-     ↓
-Dev
-     ↓
-Test
-     ↓
-Production
+```mermaid
+flowchart TD
+    N0["Build artifact"]
+    N1["Dev"]
+    N2["Test"]
+    N3["Production"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+```
 
 A multistage YAML pipeline can model the same lifecycle:
 
@@ -5309,11 +5589,14 @@ Approvals are an important migration trap
 
 Suppose the Classic release has:
 
-Test
-  ↓
-[Production approval]
-  ↓
-Production
+```mermaid
+flowchart TD
+    N0["Test"]
+    N1["&#91;Production approval&#93;"]
+    N2["Production"]
+    N0 --> N1
+    N1 --> N2
+```
 
 A common mistake is assuming every governance control belongs directly in azure-pipelines.yml.
 
@@ -5343,15 +5626,18 @@ Now if production breaks, which change caused it?
 
 A safer migration approach is:
 
-Understand existing behavior
-        ↓
-Translate to YAML
-        ↓
-Validate equivalent behavior
-        ↓
-Cut over
-        ↓
-Optimize/refactor afterward
+```mermaid
+flowchart TD
+    N0["Understand existing behavior"]
+    N1["Translate to YAML"]
+    N2["Validate equivalent behavior"]
+    N3["Cut over"]
+    N4["Optimize/refactor afterward"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+```
 
 This is similar to your database migration work: reduce the number of independent changes happening at once.
 
@@ -5368,6 +5654,7 @@ This is similar to your database migration work: reduce the number of independen
 ## Design and implement authentication and authorization methods
 
 ### Choose between Microsoft Entra service principals and managed identities for Azure resources (system-assigned and user-assigned)
+
 The three choices you need to distinguish are:
 
 Service principal
@@ -5400,13 +5687,16 @@ The Azure workload can authenticate without you managing application credentials
 
 For example:
 
-Azure Function
-      ↓
-Managed identity
-      ↓
-Key Vault Secrets User
-      ↓
-Key Vault
+```mermaid
+flowchart TD
+    N0["Azure Function"]
+    N1["Managed identity"]
+    N2["Key Vault Secrets User"]
+    N3["Key Vault"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+```
 
 No Key Vault password needs to sit inside the Function's configuration.
 
@@ -5446,11 +5736,12 @@ User-assigned managed identity
 
 A user-assigned managed identity is created as a separate Azure resource.
 
-User-assigned identity
-       ↓
- ┌─────┼─────┐
- ↓     ↓     ↓
-VM1   VM2   VM3
+```mermaid
+flowchart TD
+    N0["User-assigned identity"]
+    N1["┌─────┼─────┐<br/>↓     ↓     ↓<br/>VM1   VM2   VM3"]
+    N0 --> N1
+```
 
 Multiple Azure resources can use the same identity.
 
@@ -5494,13 +5785,12 @@ Azure RBAC
 
 For example:
 
-Function's managed identity
-        +
-Key Vault Secrets User
-        +
-scope = Key Vault
-        ↓
-Function can read appropriate secrets
+```mermaid
+flowchart TD
+    N0["Function's managed identity<br/>+<br/>Key Vault Secrets User<br/>+<br/>scope = Key Vault"]
+    N1["Function can read appropriate secrets"]
+    N0 --> N1
+```
 
 That connects directly to your earlier least-privilege work.
 
@@ -5515,6 +5805,7 @@ That connects directly to your earlier least-privilege work.
 - Prefer least privilege at the narrowest practical scope.
 
 ### Implement and manage GitHub authentication, including GitHub Apps, GITHUB_TOKEN, and personal access tokens
+
 This objective is about choosing the right GitHub credential for automation and managing its permissions safely.
 
 The three main options are:
@@ -5570,12 +5861,18 @@ GitHub Apps
 
 A GitHub App is better when automation needs more than the current repository, such as:
 
-Repository A
-   ↓
-Automation
-   ├→ Repository B
-   ├→ organization project
-   └→ multiple repositories
+```mermaid
+flowchart TD
+    N0["Repository A"]
+    N1["Automation"]
+    N2["Repository B"]
+    N3["organization project"]
+    N4["multiple repositories"]
+    N0 --> N1
+    N1 --> N2
+    N1 --> N3
+    N1 --> N4
+```
 
 GitHub Apps have fine-grained permissions, can be limited to chosen repositories, use short-lived installation tokens, and are not tied to one employee's account. GitHub recommends them for long-lived integrations and organization-level automation.
 
@@ -5656,11 +5953,14 @@ A service connection gives a pipeline an authenticated relationship to another s
 
 For example:
 
-Azure Pipeline
-      ↓
-Service connection
-      ↓
-Azure subscription/resource group
+```mermaid
+flowchart TD
+    N0["Azure Pipeline"]
+    N1["Service connection"]
+    N2["Azure subscription/resource group"]
+    N0 --> N1
+    N1 --> N2
+```
 
 Instead of putting credentials directly into YAML:
 
@@ -5674,15 +5974,18 @@ The connection itself contains or establishes the authentication mechanism.
 
 A strong modern pattern for Azure Resource Manager service connections is:
 
-Azure Pipeline
-      ↓
-Workload identity federation
-      ↓
-Microsoft Entra identity
-      ↓
-Azure RBAC
-      ↓
-Target resources
+```mermaid
+flowchart TD
+    N0["Azure Pipeline"]
+    N1["Workload identity federation"]
+    N2["Microsoft Entra identity"]
+    N3["Azure RBAC"]
+    N4["Target resources"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+```
 
 No client secret needs to sit in Azure DevOps. Microsoft recommends workload identity federation whenever possible for Azure service connections.
 
@@ -5716,11 +6019,14 @@ A PAT represents a user in Azure DevOps.
 
 Conceptually:
 
-Personal script
-    ↓
-PAT belonging to Alice
-    ↓
-Azure DevOps REST API
+```mermaid
+flowchart TD
+    N0["Personal script"]
+    N1["PAT belonging to Alice"]
+    N2["Azure DevOps REST API"]
+    N0 --> N1
+    N1 --> N2
+```
 
 PATs are bearer secrets, so anyone who obtains one may be able to act with its granted scopes. Microsoft recommends avoiding PATs when stronger Entra-based mechanisms are available and treating PATs with password-level care.
 
@@ -5770,11 +6076,14 @@ A service connection gives a pipeline an authenticated relationship to another s
 
 For example:
 
-Azure Pipeline
-      ↓
-Service connection
-      ↓
-Azure subscription/resource group
+```mermaid
+flowchart TD
+    N0["Azure Pipeline"]
+    N1["Service connection"]
+    N2["Azure subscription/resource group"]
+    N0 --> N1
+    N1 --> N2
+```
 
 Instead of putting credentials directly into YAML:
 
@@ -5788,15 +6097,18 @@ The connection itself contains or establishes the authentication mechanism.
 
 A strong modern pattern for Azure Resource Manager service connections is:
 
-Azure Pipeline
-      ↓
-Workload identity federation
-      ↓
-Microsoft Entra identity
-      ↓
-Azure RBAC
-      ↓
-Target resources
+```mermaid
+flowchart TD
+    N0["Azure Pipeline"]
+    N1["Workload identity federation"]
+    N2["Microsoft Entra identity"]
+    N3["Azure RBAC"]
+    N4["Target resources"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+```
 
 No client secret needs to sit in Azure DevOps. Microsoft recommends workload identity federation whenever possible for Azure service connections.
 
@@ -5830,11 +6142,14 @@ A PAT represents a user in Azure DevOps.
 
 Conceptually:
 
-Personal script
-    ↓
-PAT belonging to Alice
-    ↓
-Azure DevOps REST API
+```mermaid
+flowchart TD
+    N0["Personal script"]
+    N1["PAT belonging to Alice"]
+    N2["Azure DevOps REST API"]
+    N0 --> N1
+    N1 --> N2
+```
 
 PATs are bearer secrets, so anyone who obtains one may be able to act with its granted scopes. Microsoft recommends avoiding PATs when stronger Entra-based mechanisms are available and treating PATs with password-level care.
 
@@ -5887,31 +6202,35 @@ Service connection + workload identity federation
 | **Managed identity (agent-assigned)**             | Uses a managed identity assigned to the self-hosted Azure agent's compute                             | Self-hosted agents running on Azure resources with MI                                 |
 
 
-Pipeline
-   ↓
-[Azure DevOps authorization]
-"May this pipeline use az400-wif-rg-sc?"
-   ↓
-Service connection
-   ↓
-[Azure RBAC]
-"What may its identity do in Azure?"
-   ↓
-Resource group
+```mermaid
+flowchart TD
+    N0["Pipeline"]
+    N1["&#91;Azure DevOps authorization&#93;<br/>&quot;May this pipeline use az400-wif-rg-sc?&quot;"]
+    N2["Service connection"]
+    N3["&#91;Azure RBAC&#93;<br/>&quot;What may its identity do in Azure?&quot;"]
+    N4["Resource group"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+```
 
 This separation is very exam-relevant.
 
 Keep this model:
 
-Azure Pipeline
-   ↓
-Service connection
-   ↓
-Entra identity
-   ↓
-Azure RBAC
-   ↓
-Azure resources
+```mermaid
+flowchart TD
+    N0["Azure Pipeline"]
+    N1["Service connection"]
+    N2["Entra identity"]
+    N3["Azure RBAC"]
+    N4["Azure resources"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+```
 
 For Azure access, a service connection using workload identity federation is a strong default because it avoids long-lived secrets.
 
@@ -5933,18 +6252,19 @@ PAT
 - Azure RBAC controls what the underlying identity can do in Azure.
 
 ### Design and implement permissions and roles in GitHub
+
 This point is about authorization inside GitHub: who can access an organization or repository, and what they are allowed to do.
 
 The main layers are:
 
-Organization
-├── Owners
-├── Members
-└── Teams
-      ↓
-Repositories
-      ↓
-Repository roles / permissions
+```mermaid
+flowchart TD
+    N0["Organization<br/>├── Owners<br/>├── Members<br/>└── Teams"]
+    N1["Repositories"]
+    N2["Repository roles / permissions"]
+    N0 --> N1
+    N1 --> N2
+```
 
 At repository level, common permission levels include:
 
@@ -6002,13 +6322,19 @@ Repository role determines what someone is generally allowed to do.
 
 Rulesets/branch protection can still restrict actions such as:
 
-Write permission
-   ↓
-can push branches
+```mermaid
+flowchart TD
+    N0["Write permission"]
+    N1["can push branches"]
+    N0 --> N1
+```
 
-main protected
-   ↓
-cannot bypass required PR/checks
+```mermaid
+flowchart TD
+    N0["main protected"]
+    N1["cannot bypass required PR/checks"]
+    N0 --> N1
+```
 
 So:
 
@@ -6021,24 +6347,21 @@ Ruleset
 → how protected branches/tags may be changed
 
 ### Design and implement permissions and security groups in Azure DevOps
+
 The core question is:
 
 Who should be allowed to perform which actions in Azure DevOps, and at what scope?
 
 Azure DevOps authorization has several layers:
 
-Organization
-    ↓
-Project
-    ↓
-Resources
-├── Repositories
-├── Pipelines
-├── Environments
-├── Service connections
-├── Agent pools
-└── Artifacts
-Security groups
+```mermaid
+flowchart TD
+    N0["Organization"]
+    N1["Project"]
+    N2["Resources<br/>├── Repositories<br/>├── Pipelines<br/>├── Environments<br/>├── Service connections<br/>├── Agent pools<br/>└── Artifacts<br/>Security groups"]
+    N0 --> N1
+    N1 --> N2
+```
 
 Instead of assigning permissions individually, Azure DevOps provides built-in groups, and you can create custom groups.
 
@@ -6065,11 +6388,14 @@ Prefer group membership over managing dozens of individual ACLs.
 
 For example:
 
-Developers
-    ↓
-Contributors group
-    ↓
-standard development permissions
+```mermaid
+flowchart TD
+    N0["Developers"]
+    N1["Contributors group"]
+    N2["standard development permissions"]
+    N0 --> N1
+    N1 --> N2
+```
 
 rather than configuring Alice, Bob, Charlie, etc. independently.
 
@@ -6108,11 +6434,12 @@ Permissions commonly flow down from broader scopes.
 
 Conceptually:
 
-Project
-   ↓ inherited
-Repository
-   ↓
-Branch
+```mermaid
+flowchart TD
+    N0["Project<br/>↓ inherited<br/>Repository"]
+    N1["Branch"]
+    N0 --> N1
+```
 
 You can customize permissions at narrower scopes when necessary.
 
@@ -6128,12 +6455,14 @@ You may also use Microsoft Entra groups to manage membership.
 
 For example:
 
-Entra group
-Backend-Developers
-       ↓
-Azure DevOps
-       ↓
-appropriate project/group permissions
+```mermaid
+flowchart TD
+    N0["Entra group<br/>Backend-Developers"]
+    N1["Azure DevOps"]
+    N2["appropriate project/group permissions"]
+    N0 --> N1
+    N1 --> N2
+```
 
 This can simplify lifecycle management because membership is centrally maintained rather than manually adding every employee in Azure DevOps.
 
@@ -6178,6 +6507,7 @@ Administrator
 - Some Azure DevOps resources use their own roles. For an Environment, User allows use while Administrator provides management authority.
 
 ### Recommend appropriate access levels, including stakeholder access in Azure DevOps and outside collaborator access in GitHub
+
 Access level answers “what product capabilities should this person have?” while permissions answer “what are they authorized to do?”
 
 The two named concepts to know are:
@@ -6224,11 +6554,12 @@ Her access level can still limit product functionality.
 
 Think of effective access as constrained by both:
 
-Access level
-     +
-Permissions
-     ↓
-What the user can actually do
+```mermaid
+flowchart TD
+    N0["Access level<br/>+<br/>Permissions"]
+    N1["What the user can actually do"]
+    N0 --> N1
+```
 
 So changing a permission doesn't necessarily solve an access-level limitation.
 
@@ -6238,14 +6569,14 @@ An outside collaborator is someone who has access to repositories in a GitHub or
 
 For example:
 
-GitHub Organization
-├── Employees → organization members
-│
-└── External contractor
-       ↓
-   outside collaborator
-       ↓
-   specific repository
+```mermaid
+flowchart TD
+    N0["GitHub Organization<br/>├── Employees → organization members<br/>│<br/>└── External contractor"]
+    N1["outside collaborator"]
+    N2["specific repository"]
+    N0 --> N1
+    N1 --> N2
+```
 
 This is useful for contractors, consultants, or partners who need access to selected repositories but don't need general organization membership.
 
@@ -6288,16 +6619,19 @@ GitHub:
 Organization relationship ≠ repository permission
 
 ### Configure projects and teams in Azure DevOps
+
 The new focus is the organizational structure of Azure DevOps:
 
-Azure DevOps Organization
-        ↓
-Projects
-        ↓
-Teams
-        ↓
-Boards / backlogs / iterations / areas
-Projects
+```mermaid
+flowchart TD
+    N0["Azure DevOps Organization"]
+    N1["Projects"]
+    N2["Teams"]
+    N3["Boards / backlogs / iterations / areas<br/>Projects"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+```
 
 A project is a major isolation and organization boundary in Azure DevOps. It contains resources such as:
 
@@ -6339,12 +6673,12 @@ A project automatically has a default team, and additional teams can be created 
 
 Teams let different groups work within the same project while maintaining their own planning views.
 
-OnlineStore project
-       ↓
- ┌─────┼────────┐
- ↓     ↓        ↓
-Web   Orders  Payments
-Team   Team     Team
+```mermaid
+flowchart TD
+    N0["OnlineStore project"]
+    N1["┌─────┼────────┐<br/>↓     ↓        ↓<br/>Web   Orders  Payments<br/>Team   Team     Team"]
+    N0 --> N1
+```
 
 This is particularly important for Azure Boards.
 
@@ -6420,6 +6754,7 @@ There is some interaction between these concepts, but don't treat “create a te
 ## Design and implement a strategy for managing sensitive information in automation
 
 ### Implement and manage secrets, keys, and certificates by using Azure Key Vault
+
 We've already established two important ideas:
 
 Don't put secrets in YAML/source control.
@@ -6499,27 +6834,33 @@ Applications shouldn't authenticate with another secret if avoidable
 
 Imagine:
 
-App Service
-   ↓
-password stored in config
-   ↓
-Key Vault
-   ↓
-retrieve another password
+```mermaid
+flowchart TD
+    N0["App Service"]
+    N1["password stored in config"]
+    N2["Key Vault"]
+    N3["retrieve another password"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+```
 
 We've protected one secret by introducing another secret.
 
 A better Azure-hosted design is:
 
-App Service
-   ↓
-Managed identity
-   ↓
-Entra authentication
-   ↓
-Key Vault RBAC
-   ↓
-Secret
+```mermaid
+flowchart TD
+    N0["App Service"]
+    N1["Managed identity"]
+    N2["Entra authentication"]
+    N3["Key Vault RBAC"]
+    N4["Secret"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+```
 
 No Key Vault credential needs to be stored by the application.
 
@@ -6556,17 +6897,20 @@ Putting a password into Key Vault doesn't magically solve its lifecycle.
 
 You still need a strategy for:
 
-creation
-   ↓
-secure storage
-   ↓
-access
-   ↓
-rotation
-   ↓
-expiration
-   ↓
-revocation/deletion
+```mermaid
+flowchart TD
+    N0["creation"]
+    N1["secure storage"]
+    N2["access"]
+    N3["rotation"]
+    N4["expiration"]
+    N5["revocation/deletion"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+    N4 --> N5
+```
 
 Where possible, eliminating credentials entirely with managed identity/workload identity federation is preferable to continuously managing passwords.
 
@@ -6582,6 +6926,7 @@ But when a secret genuinely exists, Key Vault gives you a controlled place to ma
 
 
 ### Implement and manage secrets and secretless authentication (for example, workload identity federation/OpenID Connect) in GitHub Actions and Azure Pipelines
+
 This objective connects several things you've already practiced:
 
 Key Vault
@@ -6608,13 +6953,16 @@ Client secret
 
 The secret has to be stored somewhere:
 
-GitHub Actions / Azure Pipelines
-        ↓
-stored client secret
-        ↓
-Entra service principal
-        ↓
-Azure
+```mermaid
+flowchart TD
+    N0["GitHub Actions / Azure Pipelines"]
+    N1["stored client secret"]
+    N2["Entra service principal"]
+    N3["Azure"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+```
 
 Even if the secret is safely stored as a GitHub Actions secret or Azure DevOps secret variable, it still has a lifecycle:
 
@@ -6625,16 +6973,18 @@ With workload identity federation, there is no long-lived client secret to store
 
 Instead:
 
-GitHub Actions / Azure Pipelines
-        ↓
-short-lived OIDC token
-        ↓
-Microsoft Entra ID
-   validates trust
-        ↓
-short-lived Azure access token
-        ↓
-Azure
+```mermaid
+flowchart TD
+    N0["GitHub Actions / Azure Pipelines"]
+    N1["short-lived OIDC token"]
+    N2["Microsoft Entra ID<br/>validates trust"]
+    N3["short-lived Azure access token"]
+    N4["Azure"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+```
 
 The important word is trust.
 
@@ -6717,15 +7067,18 @@ Your lab used:
 
 Behind that:
 
-Azure Pipeline
-        ↓
-Service connection
-        ↓
-Workload identity federation
-        ↓
-Entra identity
-        ↓
-Azure RBAC
+```mermaid
+flowchart TD
+    N0["Azure Pipeline"]
+    N1["Service connection"]
+    N2["Workload identity federation"]
+    N3["Entra identity"]
+    N4["Azure RBAC"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+```
 
 There was no Azure client secret in your YAML.
 
@@ -6751,35 +7104,36 @@ Azure Pipelines can similarly use secret variables, variable groups, or Key Vaul
 
 The design decision therefore becomes:
 
-Can authentication be secretless?
-        │
-       YES
-        ↓
-OIDC / WIF
+```mermaid
+flowchart TD
+    N0["Can authentication be secretless?<br/>│<br/>YES"]
+    N1["OIDC / WIF"]
+    N0 --> N1
+```
 
-       NO
-        ↓
-Store secret securely
-+ least privilege
-+ don't expose in logs
-+ rotate
-+ minimize lifetime/scope
+```mermaid
+flowchart TD
+    N0["NO"]
+    N1["Store secret securely<br/>+ least privilege<br/>+ don't expose in logs<br/>+ rotate<br/>+ minimize lifetime/scope"]
+    N0 --> N1
+```
 
-GitHub Actions on main
-        ↓
-id-token: write
-        ↓
-GitHub issues short-lived OIDC token
-        ↓
-Entra checks federated credential
-  issuer + subject + audience
-        ↓
-Entra issues Azure access token
-        ↓
-Azure RBAC
-Contributor @ lab resource group
-        ↓
-Azure resources
+```mermaid
+flowchart TD
+    N0["GitHub Actions on main"]
+    N1["id-token: write"]
+    N2["GitHub issues short-lived OIDC token"]
+    N3["Entra checks federated credential<br/>issuer + subject + audience"]
+    N4["Entra issues Azure access token"]
+    N5["Azure RBAC<br/>Contributor @ lab resource group"]
+    N6["Azure resources"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+    N4 --> N5
+    N5 --> N6
+```
 
 - Secret management → securely store a credential that must exist.
 - Secretless authentication → remove the long-lived credential entirely where federation is supported.
@@ -6795,6 +7149,7 @@ Azure resources
 - A federated subject can be narrowly scoped to a repo/branch/environment, reducing blast radius.
 
 ### Design and implement a strategy for managing sensitive files during deployment, including Azure Pipelines secure files
+
 This objective builds on Key Vault and pipeline secrets, but the important new distinction is sensitive values vs sensitive files.
 
 You've already worked with:
@@ -6825,17 +7180,20 @@ Azure DevOps provides Secure Files in the pipeline Library.
 
 Conceptually:
 
-Sensitive file
-      ↓
-Azure DevOps Library
-      ↓
-Secure Files
-      ↓
-authorized pipeline
-      ↓
-downloaded temporarily to agent
-      ↓
-deployment/task uses file
+```mermaid
+flowchart TD
+    N0["Sensitive file"]
+    N1["Azure DevOps Library"]
+    N2["Secure Files"]
+    N3["authorized pipeline"]
+    N4["downloaded temporarily to agent"]
+    N5["deployment/task uses file"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+    N4 --> N5
+```
 
 Secure files are protected resources. You can control which pipelines are authorized to use them, similar to the service-connection authorization boundary we encountered earlier.
 
@@ -6905,26 +7263,31 @@ Don't copy it into the artifact
 
 Here's an easy trap:
 
-Secure Files
-    ↓
-download cert.pfx
-    ↓
-copy into $(Build.ArtifactStagingDirectory) ❌
-    ↓
-publish artifact ❌
+```mermaid
+flowchart TD
+    N0["Secure Files"]
+    N1["download cert.pfx"]
+    N2["copy into $(Build.ArtifactStagingDirectory) ❌"]
+    N3["publish artifact ❌"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+```
 
 You've just taken something protected by Secure Files and put it into an ordinary pipeline artifact.
 
 The safe lifecycle should be closer to:
 
-Authorize
-   ↓
-Download when needed
-   ↓
-Use temporarily
-   ↓
-Job ends / cleanup
-File + password
+```mermaid
+flowchart TD
+    N0["Authorize"]
+    N1["Download when needed"]
+    N2["Use temporarily"]
+    N3["Job ends / cleanup<br/>File + password"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+```
 
 A .pfx file can itself be password protected.
 
@@ -6954,17 +7317,21 @@ Use sensitive files temporarily; never promote them into normal build artifacts 
 - If the consumer can use Key Vault directly, that may be preferable to materializing a file on the agent.
 
 ### Design pipelines to prevent leakage of sensitive information
+
 This objective ties together Key Vault, Secure Files, secret variables, and OIDC/WIF, but the new focus is what happens after sensitive information enters a pipeline.
 
 A secret can be stored perfectly securely and still leak during execution:
 
-Key Vault ✅
-   ↓
-Pipeline retrieves secret
-   ↓
-script prints secret ❌
-   ↓
-pipeline log
+```mermaid
+flowchart TD
+    N0["Key Vault ✅"]
+    N1["Pipeline retrieves secret"]
+    N2["script prints secret ❌"]
+    N3["pipeline log"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+```
 
 So think about the entire lifecycle:
 
@@ -7084,6 +7451,7 @@ You can't accidentally print an Azure client secret that your pipeline never pos
 ## Automate security and compliance scanning
 
 ### Design a strategy for security and compliance scanning, including dependency, code, secret, and licensing scanning
+
 This objective shifts from protecting credentials to automatically detecting security and compliance problems before software is released.
 
 For AZ-400, separate four scanning categories:
@@ -7107,10 +7475,12 @@ Dependency scanning is often called Software Composition Analysis (SCA).
 
 Suppose:
 
-orders-api
-└── Newtonsoft.Json 10.x
-       ↓
-known vulnerability
+```mermaid
+flowchart TD
+    N0["orders-api<br/>└── Newtonsoft.Json 10.x"]
+    N1["known vulnerability"]
+    N0 --> N1
+```
 
 Your own source code could be perfectly written, but the application is still vulnerable because of a third-party dependency.
 
@@ -7160,11 +7530,14 @@ It analyzes your source/code structure for security problems such as unsafe data
 
 Conceptually:
 
-Your source code
-      ↓
-Static analysis
-      ↓
-security findings
+```mermaid
+flowchart TD
+    N0["Your source code"]
+    N1["Static analysis"]
+    N2["security findings"]
+    N0 --> N1
+    N1 --> N2
+```
 
 In GitHub, CodeQL is an important example.
 
@@ -7195,15 +7568,18 @@ Did somebody put a secret somewhere it should never have been?
 
 An important response strategy is:
 
-Secret detected
-      ↓
-Don't merely delete the Git line
-      ↓
-Revoke / rotate credential
-      ↓
-Remove exposure
-      ↓
-Investigate usage/history
+```mermaid
+flowchart TD
+    N0["Secret detected"]
+    N1["Don't merely delete the Git line"]
+    N2["Revoke / rotate credential"]
+    N3["Remove exposure"]
+    N4["Investigate usage/history"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+```
 
 Why?
 
@@ -7292,6 +7668,7 @@ Every finding must always block every pipeline.
 A mature strategy considers severity, confidence, environment, exceptions, and risk acceptance.
 
 ### Configure Microsoft Defender for Cloud DevOps Security
+
 Now we're moving from individual scanners to a service that gives security teams visibility across the DevOps lifecycle: Microsoft Defender for Cloud DevOps Security.
 
 You've already learned:
@@ -7309,15 +7686,12 @@ The core model
 
 Think of it roughly as:
 
-GitHub / Azure DevOps
-        │
-        │ connection
-        ▼
-Microsoft Defender for Cloud
-        │
-        ├── DevOps security posture
-        ├── Recommendations
-        └── Findings / risk visibility
+```mermaid
+flowchart TD
+    N0["GitHub / Azure DevOps<br/>│<br/>│ connection"]
+    N1["Microsoft Defender for Cloud<br/>│<br/>├── DevOps security posture<br/>├── Recommendations<br/>└── Findings / risk visibility"]
+    N0 --> N1
+```
 
 This matters in larger organizations. A security team may have hundreds of repositories spread across GitHub organizations and Azure DevOps organizations.
 
@@ -7364,13 +7738,16 @@ Defender for Cloud does not mean:
 
 You still want the shift-left controls we discussed:
 
-Developer
-    ↓
-PR
-    ↓
-CI security controls
-    ↓
-Merge
+```mermaid
+flowchart TD
+    N0["Developer"]
+    N1["PR"]
+    N2["CI security controls"]
+    N3["Merge"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+```
 
 Defender for Cloud adds centralized posture and security management around that DevOps estate.
 
@@ -7407,17 +7784,20 @@ The security loop
 
 For this objective, keep this model in mind:
 
-Connect DevOps environment
-        ↓
-Discover repositories
-        ↓
-Assess DevOps security posture
-        ↓
-Surface recommendations/findings
-        ↓
-Remediate
-        ↓
-Continuously reassess
+```mermaid
+flowchart TD
+    N0["Connect DevOps environment"]
+    N1["Discover repositories"]
+    N2["Assess DevOps security posture"]
+    N3["Surface recommendations/findings"]
+    N4["Remediate"]
+    N5["Continuously reassess"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+    N4 --> N5
+```
 
 We'll avoid repeating all the SAST/SCA theory from the previous objective and focus on connectors, centralized posture, recommendations, and Defender integration.
 
@@ -7441,6 +7821,7 @@ The biggest exam trap is:
 Defender for Cloud DevOps Security ≠ Azure DevOps service connection ≠ replacement for CI security scanning.
 
 ### Configure GitHub Advanced Security for GitHub and GitHub Advanced Security for Azure DevOps
+
 This overlaps with the scanning objective we just completed, so we'll not repeat SAST/SCA basics. The new focus is configuring the GitHub Advanced Security capabilities themselves, on both GitHub and Azure DevOps.
 
 One terminology update is useful: GitHub now presents Advanced Security capabilities primarily as GitHub Code Security and GitHub Secret Protection. Azure DevOps similarly lets you enable Code Security and/or Secret Protection.
@@ -7494,9 +7875,12 @@ Detection:
 developer → push secret → repository → ALERT
 
 Prevention:
-developer → push secret → BLOCKED
-                            ↑
-                      push protection
+```mermaid
+flowchart TD
+    N0["developer → push secret → BLOCKED"]
+    N1["push protection"]
+    N1 --> N0
+```
 
 From a security-design perspective, prevention is preferable where practical.
 
@@ -7550,13 +7934,16 @@ steps:
 
 Don't memorize YAML character-for-character. Understand:
 
-Initialize CodeQL
-      ↓
-Build/analyze application as required
-      ↓
-Perform CodeQL analysis
-      ↓
-Alerts in Advanced Security
+```mermaid
+flowchart TD
+    N0["Initialize CodeQL"]
+    N1["Build/analyze application as required"]
+    N2["Perform CodeQL analysis"]
+    N3["Alerts in Advanced Security"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+```
 
 Dependency scanning is also pipeline-based in Azure DevOps, while secret repository scanning starts in the background when Secret Protection is enabled.
 
@@ -7570,15 +7957,18 @@ scan → alert
 
 Enforcement adds:
 
-PR
- ↓
-security scan
- ↓
-security status check
- ↓
-policy violated?
- ↓
-BLOCK MERGE
+```mermaid
+flowchart TD
+    N0["PR"]
+    N1["security scan"]
+    N2["security status check"]
+    N3["policy violated?"]
+    N4["BLOCK MERGE"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+```
 
 GitHub Advanced Security for Azure DevOps supports PR annotations and security status checks; status checks can prevent merging when relevant security findings violate the configured policy.
 
@@ -7587,6 +7977,7 @@ This connects directly to your previous answer:
 Security scanning still needs to be addressed even if functional tests pass.
 
 ### Integrate GitHub Advanced Security with Microsoft Defender for Cloud
+
 This objective connects the previous two objectives, so we'll focus specifically on the integration path rather than repeat CodeQL, secret scanning, SCA, or Defender basics.
 
 You've already built these two mental models:
@@ -7599,20 +7990,16 @@ Microsoft Defender for Cloud DevOps Security
 
 Now combine them:
 
-GitHub / Azure DevOps repositories
-        │
-        ├── CodeQL findings
-        ├── dependency findings
-        └── secret findings
-                 │
-                 ▼
-        DevOps connector
-                 │
-                 ▼
-      Microsoft Defender for Cloud
-                 │
-                 ▼
-     Centralized DevOps security view
+```mermaid
+flowchart TD
+    N0["GitHub / Azure DevOps repositories<br/>│<br/>├── CodeQL findings<br/>├── dependency findings<br/>└── secret findings<br/>│"]
+    N1["DevOps connector<br/>│"]
+    N2["Microsoft Defender for Cloud<br/>│"]
+    N3["Centralized DevOps security view"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+```
 
 The important architectural idea is not to replace GitHub Advanced Security with Defender.
 
@@ -7652,11 +8039,14 @@ Connector is still fundamental
 
 Remember our previous lab:
 
-Defender for Cloud
-      ↓
-DevOps connector
-      ↓
-GitHub / Azure DevOps
+```mermaid
+flowchart TD
+    N0["Defender for Cloud"]
+    N1["DevOps connector"]
+    N2["GitHub / Azure DevOps"]
+    N0 --> N1
+    N1 --> N2
+```
 
 That connector is the foundation for Defender's DevOps visibility.
 
@@ -7687,11 +8077,14 @@ One of the particularly useful ideas behind the integration is connecting develo
 
 Conceptually:
 
-Code repository
-      ↓
-pipeline
-      ↓
-Azure workload
+```mermaid
+flowchart TD
+    N0["Code repository"]
+    N1["pipeline"]
+    N2["Azure workload"]
+    N0 --> N1
+    N1 --> N2
+```
 
 If security tooling can understand relationships across those layers, security teams can prioritize findings with better context.
 
@@ -7724,6 +8117,7 @@ Defender for Cloud
 → organization-wide prioritization
 
 ### Automate container scanning, including scanning container images and configuring an action to run CodeQL analysis in a container
+
 This objective introduces containers as another security boundary. We already know CodeQL/SAST and dependency scanning, so we'll focus on what's new.
 
 There are actually two different ideas hidden in this objective:
@@ -7765,14 +8159,16 @@ A vulnerability could therefore exist in the base image or OS package even thoug
 
 That's why container-image scanning matters:
 
-Build image
-    ↓
-Scan resulting image
-    ↓
-Evaluate vulnerabilities against policy
-    ↓
-Pass → publish/deploy
-Fail → stop promotion
+```mermaid
+flowchart TD
+    N0["Build image"]
+    N1["Scan resulting image"]
+    N2["Evaluate vulnerabilities against policy"]
+    N3["Pass → publish/deploy<br/>Fail → stop promotion"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+```
 
 This is another example of scanning the artifact you're actually going to deploy.
 
@@ -7826,15 +8222,16 @@ Severity policy
 
 Just like earlier scanning:
 
-Scanner finds CVE
-      ↓
-Critical?
-High?
-Medium?
-      ↓
-Security policy
-      ↓
-block / warn / accept
+```mermaid
+flowchart TD
+    N0["Scanner finds CVE"]
+    N1["Critical?<br/>High?<br/>Medium?"]
+    N2["Security policy"]
+    N3["block / warn / accept"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+```
 
 Again, scanner execution and policy enforcement are different things.
 
@@ -7851,25 +8248,27 @@ GitHub runner
 
 But sometimes the software must be built inside a particular container because it requires a specialized build environment:
 
-GitHub Actions runner
-       ↓
-Container
-├── compiler
-├── SDK
-├── dependencies
-└── application build
+```mermaid
+flowchart TD
+    N0["GitHub Actions runner"]
+    N1["Container<br/>├── compiler<br/>├── SDK<br/>├── dependencies<br/>└── application build"]
+    N0 --> N1
+```
 
 The challenge is ensuring CodeQL can correctly observe/analyze the build occurring in that container.
 
 Conceptually:
 
-CodeQL initialization
-        ↓
-containerized build
-        ↓
-CodeQL captures required build information
-        ↓
-CodeQL analysis
+```mermaid
+flowchart TD
+    N0["CodeQL initialization"]
+    N1["containerized build"]
+    N2["CodeQL captures required build information"]
+    N3["CodeQL analysis"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+```
 
 This is especially relevant to compiled languages, where CodeQL may need to observe compilation.
 
@@ -7902,6 +8301,7 @@ RUNNING CLOUD ENVIRONMENT
 Passing one layer doesn't prove the next layer is safe. Running CodeQL analysis in a container ≠ scanning a container image.
 
 ### Automate analysis of vulnerabilities of open-source components by using Dependabot alerts
+
 This overlaps strongly with the dependency/SCA scanning we've already done, so we won't repeat what a dependency vulnerability is.
 
 The new focus is Dependabot and how GitHub automates detection and remediation of vulnerable open-source dependencies.
@@ -7942,18 +8342,20 @@ GitHub needs to understand the repository's dependencies.
 
 For your npm lab:
 
-package.json
-package-lock.json
-       ↓
-Dependency graph
-       ↓
-lodash version identified
-       ↓
-GitHub Advisory Database
-       ↓
-known vulnerable?
-       ↓
-Dependabot alert
+```mermaid
+flowchart TD
+    N0["package.json<br/>package-lock.json"]
+    N1["Dependency graph"]
+    N2["lodash version identified"]
+    N3["GitHub Advisory Database"]
+    N4["known vulnerable?"]
+    N5["Dependabot alert"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+    N4 --> N5
+```
 
 So Dependabot alerts are closely tied to GitHub's understanding of the dependency graph.
 
@@ -7971,16 +8373,16 @@ Detection and remediation automation are separate concepts.
 
 This connects to our earlier npm audit fix --force discussion. Automatically changing dependencies can introduce compatibility problems, so the proposed update should still go through your normal engineering controls:
 
-Dependabot detects vulnerability
-        ↓
-Dependabot opens security-update PR
-        ↓
-CI
-├── tests
-├── security scans
-└── other policies
-        ↓
-review / merge
+```mermaid
+flowchart TD
+    N0["Dependabot detects vulnerability"]
+    N1["Dependabot opens security-update PR"]
+    N2["CI<br/>├── tests<br/>├── security scans<br/>└── other policies"]
+    N3["review / merge"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+```
 Why Dependabot is useful alongside CI
 
 Remember this scenario?
@@ -8054,9 +8456,11 @@ Dependabot = open-source dependency risk. CodeQL = your source-code security ana
 
 
 # Implement an instrumentation strategy
+
 ## Configure monitoring for a DevOps environment
 
 ### Configure Azure Monitor and Azure Monitor Logs to integrate with DevOps tools
+
 The security section asked:
 
 “Is our software secure and compliant?”
@@ -8128,18 +8532,14 @@ Log Analytics workspace
 
 Azure Monitor Logs commonly stores/query data through a Log Analytics workspace.
 
-Azure resources
-      │
-      │ telemetry/logs
-      ▼
-Log Analytics workspace
-      │
-      ▼
-KQL queries
-      │
-      ├── investigation
-      ├── dashboards/workbooks
-      └── alerts
+```mermaid
+flowchart TD
+    N0["Azure resources<br/>│<br/>│ telemetry/logs"]
+    N1["Log Analytics workspace<br/>│"]
+    N2["KQL queries<br/>│<br/>├── investigation<br/>├── dashboards/workbooks<br/>└── alerts"]
+    N0 --> N1
+    N1 --> N2
+```
 
 A common exam trap is thinking:
 
@@ -8155,16 +8555,16 @@ A major Azure Monitor concept is diagnostic settings.
 
 Conceptually:
 
-Azure resource
-     ↓
-Diagnostic setting
-     ↓
-choose logs/metrics
-     ↓
-Destination
-     ├── Log Analytics workspace
-     ├── Storage
-     └── Event Hub
+```mermaid
+flowchart TD
+    N0["Azure resource"]
+    N1["Diagnostic setting"]
+    N2["choose logs/metrics"]
+    N3["Destination<br/>├── Log Analytics workspace<br/>├── Storage<br/>└── Event Hub"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+```
 
 Different destinations serve different purposes.
 
@@ -8176,21 +8576,24 @@ Monitoring shouldn't be something only operations staff inspect manually in the 
 
 A useful DevOps loop is:
 
-Deploy
-  ↓
-Application runs
-  ↓
-Azure Monitor collects telemetry
-  ↓
-Logs / metrics analyzed
-  ↓
-Alert / finding
-  ↓
-DevOps team investigates
-  ↓
-Work item / incident / remediation
-  ↓
-New deployment
+```mermaid
+flowchart TD
+    N0["Deploy"]
+    N1["Application runs"]
+    N2["Azure Monitor collects telemetry"]
+    N3["Logs / metrics analyzed"]
+    N4["Alert / finding"]
+    N5["DevOps team investigates"]
+    N6["Work item / incident / remediation"]
+    N7["New deployment"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+    N4 --> N5
+    N5 --> N6
+    N6 --> N7
+```
 
 That's the key phrase in the objective: integrate with DevOps tools.
 
@@ -8218,6 +8621,7 @@ Modern Application Insights is workspace-based, so the two integrate closely—b
 
 
 ### Configure collection of telemetry by using Azure Monitor Application Insights, Azure VM Insights, Azure Container Insights, Azure Monitor for Storage, and Azure Monitor for Networks
+
 The previous objective established the plumbing:
 
 Resource
@@ -8270,13 +8674,16 @@ An important concept is distributed tracing.
 
 Imagine:
 
-Browser
-   ↓
-Orders API
-   ↓
-Payment API
-   ↓
-SQL database
+```mermaid
+flowchart TD
+    N0["Browser"]
+    N1["Orders API"]
+    N2["Payment API"]
+    N3["SQL database"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+```
 
 Application Insights can help trace a request through dependencies, which is much more useful for application troubleshooting than simply knowing that CPU is 42%.
 
@@ -8299,14 +8706,12 @@ This commonly involves the Azure Monitor Agent (AMA) and a Data Collection Rule 
 
 That's a new architectural concept worth knowing:
 
-Azure Monitor Agent
-        ↓
-Data Collection Rule
-        ↓
-defines what data to collect
-and where it should go
-        ↓
-Azure Monitor / Log Analytics
+```mermaid
+flowchart TD
+    A["Azure Monitor Agent"] --> D["Data Collection Rule"]
+    D --> C["defines what data to collect<br/>and where it should go"]
+    C --> L["Azure Monitor / Log Analytics"]
+```
 
 A DCR is therefore different from the diagnostic settings we used previously, even though both participate in telemetry collection.
 
@@ -8316,14 +8721,12 @@ Container Insights is designed for containerized environments, particularly Kube
 
 Think:
 
-AKS cluster
-├── nodes
-├── pods
-├── containers
-├── workloads
-└── container logs/performance
-       ↓
-Container Insights
+```mermaid
+flowchart TD
+    N0["AKS cluster<br/>├── nodes<br/>├── pods<br/>├── containers<br/>├── workloads<br/>└── container logs/performance"]
+    N1["Container Insights"]
+    N0 --> N1
+```
 
 This helps answer questions like:
 
@@ -8365,14 +8768,14 @@ Network monitoring focuses on the network layer and network resources.
 Conceptually:
 
 Application reports:
-"Backend unreachable"
-        ↓
-Is application broken?
-Is VM down?
-Is DNS wrong?
-Is network path blocked?
-        ↓
-Network monitoring
+```mermaid
+flowchart TD
+    N0["&quot;Backend unreachable&quot;"]
+    N1["Is application broken?<br/>Is VM down?<br/>Is DNS wrong?<br/>Is network path blocked?"]
+    N2["Network monitoring"]
+    N0 --> N1
+    N1 --> N2
+```
 
 Depending on the Azure networking scenario, you may use monitoring capabilities around connectivity, topology, network resources, metrics, logs, and Network Watcher capabilities.
 
@@ -8423,6 +8826,7 @@ Network monitoring = connectivity and network-resource behavior.
 AMA + DCR = agent-based collection where the DCR controls what is collected and where it's sent.
 
 ### Configure monitoring in GitHub, including enabling insights and creating and configuring charts
+
 This objective changes layers again. We aren't monitoring the Azure application itself; we're monitoring development activity and project work inside GitHub.
 
 There are two GitHub concepts worth separating:
@@ -8457,21 +8861,23 @@ This is the more important "creating and configuring charts" part.
 
 A GitHub Project contains structured work items:
 
-Issues / PRs
-     ↓
-GitHub Project
-     ↓
-Fields
+```mermaid
+flowchart TD
+    N0["Issues / PRs"]
+    N1["GitHub Project"]
+    N2["Fields"]
+    N0 --> N1
+    N1 --> N2
+```
 
-Status
-Priority
-Assignee
-Iteration
-etc.
-     ↓
-Insights
-     ↓
-Charts
+```mermaid
+flowchart TD
+    N0["Status<br/>Priority<br/>Assignee<br/>Iteration<br/>etc."]
+    N1["Insights"]
+    N2["Charts"]
+    N0 --> N1
+    N1 --> N2
+```
 
 Project Insights lets you create and customize charts based on the items in the project. You can configure filters, chart type, and the information displayed.
 
@@ -8493,26 +8899,33 @@ could restrict the chart to bugs, while multiple different fields effectively co
 
 So remember:
 
-Project items + fields
-        ↓
-filter
-        ↓
-group / axes / chart configuration
-        ↓
-useful engineering insight
+```mermaid
+flowchart TD
+    N0["Project items + fields"]
+    N1["filter"]
+    N2["group / axes / chart configuration"]
+    N3["useful engineering insight"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+```
 
 ### Configure alerts for events in GitHub Actions and Azure Pipelines
+
 This overlaps somewhat with Azure Monitor alerts, so we'll focus on what's new: pipeline/workflow events and how DevOps teams get notified when they occur.
 
 The central pattern is:
 
-Pipeline/workflow event
-        ↓
-Condition/event occurs
-        ↓
-Notification mechanism
-        ↓
-Developer / team / external system
+```mermaid
+flowchart TD
+    N0["Pipeline/workflow event"]
+    N1["Condition/event occurs"]
+    N2["Notification mechanism"]
+    N3["Developer / team / external system"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+```
 
 Examples of events:
 
@@ -8597,11 +9010,14 @@ Service hooks
 
 For example:
 
-Pipeline fails
-     ↓
-Service hook
-     ↓
-External incident/automation system
+```mermaid
+flowchart TD
+    N0["Pipeline fails"]
+    N1["Service hook"]
+    N2["External incident/automation system"]
+    N0 --> N1
+    N1 --> N2
+```
 
 This is similar conceptually to what you learned with Azure Monitor:
 
@@ -8619,13 +9035,17 @@ Different implementations, same DevOps principle: detect an event and route an a
 ## Analyze metrics from instrumentation
 
 ### Inspect infrastructure performance indicators, including CPU, memory, disk, and network
+
 We've already covered collecting infrastructure telemetry with Azure Monitor, VM Insights, AMA and DCR.
 
 This objective shifts from:
 
-"How do I collect telemetry?"
-          ↓
-"How do I interpret infrastructure telemetry?"
+```mermaid
+flowchart TD
+    N0["&quot;How do I collect telemetry?&quot;"]
+    N1["&quot;How do I interpret infrastructure telemetry?&quot;"]
+    N0 --> N1
+```
 
 The four core signals are CPU, memory, disk, and network. The exam will often give you several indicators and ask which resource is the likely bottleneck.
 
@@ -8768,19 +9188,23 @@ points toward disk I/O.
 
 This is why instrumentation is useful to DevOps:
 
-Deployment
-    ↓
-Performance changes
-    ↓
-Correlate metrics
-    ↓
-Identify bottleneck
-    ↓
-Fix / scale / rollback
+```mermaid
+flowchart TD
+    N0["Deployment"]
+    N1["Performance changes"]
+    N2["Correlate metrics"]
+    N3["Identify bottleneck"]
+    N4["Fix / scale / rollback"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+```
 
 Don't diagnose from a single high number. Correlate CPU, memory, disk, network, time window, limits, and application behavior.
 
 ### Analyze metrics by using collected telemetry, including usage and application performance
+
 We've moved through three stages:
 
 Collect telemetry
@@ -8876,24 +9300,25 @@ You practiced this with CPU/memory/disk/network. The same idea applies at the ap
 
 For example:
 
-Deployment at 14:00
-        ↓
-Request duration ↑
-Failure rate ↑
-        ↓
-Application Insights telemetry
-        ↓
-Investigate deployment/change
+```mermaid
+flowchart TD
+    N0["Deployment at 14:00"]
+    N1["Request duration ↑<br/>Failure rate ↑"]
+    N2["Application Insights telemetry"]
+    N3["Investigate deployment/change"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+```
 
 Or:
 
-Usage ↑ 300%
-     +
-Request latency ↑
-     +
-CPU ↑
-     ↓
-Possible capacity/scaling problem
+```mermaid
+flowchart TD
+    N0["Usage ↑ 300%<br/>+<br/>Request latency ↑<br/>+<br/>CPU ↑"]
+    N1["Possible capacity/scaling problem"]
+    N0 --> N1
+```
 
 So the goal isn't merely to create dashboards. It's to use telemetry to answer:
 
@@ -8902,17 +9327,21 @@ What changed, who is affected, how badly, and what evidence points toward the ca
 Don't just find the worst number. Determine how many users/requests are affected, correlate it with other telemetry and changes, and prioritize based on impact.
 
 ### Inspect distributed tracing by using Azure Monitor Application Insights
+
 What problem does distributed tracing solve?
 
 Consider:
 
-Client
-  ↓
-Orders API
-  ↓
-Payment API
-  ↓
-SQL Database
+```mermaid
+flowchart TD
+    N0["Client"]
+    N1["Orders API"]
+    N2["Payment API"]
+    N3["SQL Database"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+```
 
 A user reports:
 
@@ -8939,14 +9368,20 @@ This distinction is fundamental.
 For the Orders API:
 
 Incoming:
-Client → Orders API
-         ↑
-       Request telemetry
+```mermaid
+flowchart TD
+    N0["Client → Orders API"]
+    N1["Request telemetry"]
+    N1 --> N0
+```
 
 Outgoing:
-Orders API → Payment API
-             ↑
-          Dependency telemetry
+```mermaid
+flowchart TD
+    N0["Orders API → Payment API"]
+    N1["Dependency telemetry"]
+    N1 --> N0
+```
 
 So:
 
@@ -9038,6 +9473,7 @@ Distributed tracing adds the crucial relationship:
 These operations all belong to the same request.
 
 ### Interrogate logs using basic Kusto Query Language (KQL) queries
+
 You've already used KQL in the previous labs:
 
 AppRequests
@@ -9110,14 +9546,14 @@ AppRequests
 
 Conceptually:
 
-Thousands of individual requests
-        ↓
-group by Name
-        ↓
-Name              RequestCount
-GET /                  1200
-GET /api/orders         850
-POST /api/orders        320
+```mermaid
+flowchart TD
+    N0["Thousands of individual requests"]
+    N1["group by Name"]
+    N2["Name              RequestCount<br/>GET /                  1200<br/>GET /api/orders         850<br/>POST /api/orders        320"]
+    N0 --> N1
+    N1 --> N2
+```
 
 You can calculate things such as:
 
