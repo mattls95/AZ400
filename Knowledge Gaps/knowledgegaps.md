@@ -29,3 +29,5 @@
 - Azure SQL database deployment - https://learn.microsoft.com/en-us/azure/devops/pipelines/targets/azure-sqldb?view=azure-devops&tabs=yaml%2Carm%2Cextract
 - Use Git tags - https://learn.microsoft.com/en-us/azure/devops/repos/git/git-tags?view=azure-devops&tabs=browser
 - Remove a large binary from your Git history to manage the size of cloned repositories - https://learn.microsoft.com/en-us/azure/devops/repos/git/remove-binaries?view=azure-devops
+- Design a Log Analytics workspace architecture - https://learn.microsoft.com/en-us/azure/azure-monitor/logs/workspace-design
+- Sampling in Azure Monitor Application Insights with OpenTelemetry - https://learn.microsoft.com/en-us/azure/azure-monitor/app/opentelemetry-sampling
