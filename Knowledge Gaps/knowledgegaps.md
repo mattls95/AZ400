@@ -1,30 +1,30 @@
 # Knowledge gaps
-Azure Artifacts documentation - https://learn.microsoft.com/en-us/azure/devops/artifacts/?view=azure-devops
-Azure Boards documentation - https://learn.microsoft.com/en-us/azure/devops/boards/?view=azure-devops
-Azure Pipelines documentation - https://learn.microsoft.com/en-us/azure/devops/pipelines/?view=azure-devops
-Azure Repos documentation - https://learn.microsoft.com/en-us/azure/devops/repos/?view=azure-devops
-Azure Automation documentation - https://learn.microsoft.com/en-us/azure/automation/
+- Azure Artifacts documentation - https://learn.microsoft.com/en-us/azure/devops/artifacts/?view=azure-devops
+- Azure Boards documentation - https://learn.microsoft.com/en-us/azure/devops/boards/?view=azure-devops
+- Azure Pipelines documentation - https://learn.microsoft.com/en-us/azure/devops/pipelines/?view=azure-devops
+- Azure Repos documentation - https://learn.microsoft.com/en-us/azure/devops/repos/?view=azure-devops
+- Azure Automation documentation - https://learn.microsoft.com/en-us/azure/automation/
 
-Git Scalar - https://devblogs.microsoft.com/devops/introducing-scalar/
-Manage wiki and collaboration tool permissions - https://learn.microsoft.com/en-us/azure/devops/project/wiki/manage-readme-wiki-permissions?view=azure-devops
-Differences Between: Git Revert, checkout, reset & switch commands - https://stackoverflow.com/questions/58003030/what-is-git-restore-and-how-is-it-different-from-git-reset
-Pipeline reports - https://learn.microsoft.com/en-us/azure/devops/pipelines/reports/pipelinereport?view=azure-devops
-Azure DevOps task for Azure Data Explorer - https://learn.microsoft.com/en-us/azure/data-explorer/devops
-Set and manage branch policies - https://learn.microsoft.com/en-us/azure/devops/repos/git/branch-policies?view=azure-devops&tabs=browser
-Specify events that trigger pipelines - https://learn.microsoft.com/en-us/azure/devops/pipelines/build/triggers?view=azure-devops&tabs=yaml
-Work with large files in your Git repo - https://learn.microsoft.com/en-us/azure/devops/repos/git/manage-large-files?view=azure-devops
-Git lfs - https://www.atlassian.com/git/tutorials/git-lfs
-Manage security in Azure Pipelines - https://learn.microsoft.com/en-us/azure/devops/pipelines/policies/permissions?view=azure-devops
-Default processes and process templates - https://learn.microsoft.com/en-us/azure/devops/boards/work-items/guidance/choose-process?view=azure-devops&tabs=agile-process
-SAFe® concepts and Azure Boards mapping - https://learn.microsoft.com/en-us/azure/devops/boards/plans/safe-configure-boards?view=azure-devops&tabs=agile-process#safe-concepts
-Check out multiple repositories in your pipeline - https://learn.microsoft.com/en-us/azure/devops/pipelines/repos/multi-repo-checkout?view=azure-devops
-How Microsoft plans with DevOps - https://learn.microsoft.com/en-us/devops/plan/how-microsoft-plans-devops
-Unit testing C# with NUnit and .NET Core - https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-csharp-with-nunit
-Use Azure Key Vault to pass secure parameter value during deployment - https://learn.microsoft.com/en-us/azure/azure-resource-manager/templates/key-vault-parameter?tabs=azure-cli
-Leases - https://learn.microsoft.com/en-us/rest/api/azure/devops/build/leases?view=azure-devops-rest-6.0
-Set Git repository permissions - https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops
-Azure Pipelines agents - https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/agents?view=azure-devops&tabs=yaml%2Cbrowser
-Get started with Maven packages in Azure Artifacts - https://learn.microsoft.com/en-us/azure/devops/artifacts/get-started-maven?view=azure-devops
-UI testing considerations - https://learn.microsoft.com/en-us/azure/devops/pipelines/test/ui-testing-considerations?view=azure-devops&tabs=mstest
-Azure SQL database deployment - https://learn.microsoft.com/en-us/azure/devops/pipelines/targets/azure-sqldb?view=azure-devops&tabs=yaml%2Carm%2Cextract
-Use Git tags - https://learn.microsoft.com/en-us/azure/devops/repos/git/git-tags?view=azure-devops&tabs=browser
+- Git Scalar - https://devblogs.microsoft.com/devops/introducing-scalar/
+- Manage wiki and collaboration tool permissions - https://learn.microsoft.com/en-us/azure/devops/project/wiki/manage-readme-wiki-permissions?view=azure-devops
+- Differences Between: Git Revert, checkout, reset & switch commands - https://stackoverflow.com/questions/58003030/what-is-git-restore-and-how-is-it-different-from-git-reset
+- Pipeline reports - https://learn.microsoft.com/en-us/azure/devops/pipelines/reports/pipelinereport?view=azure-devops
+- Azure DevOps task for Azure Data Explorer - https://learn.microsoft.com/en-us/azure/data-explorer/devops
+- Set and manage branch policies - https://learn.microsoft.com/en-us/azure/devops/repos/git/branch-policies?view=azure-devops&tabs=browser
+- Specify events that trigger pipelines - https://learn.microsoft.com/en-us/azure/devops/pipelines/build/triggers?view=azure-devops&tabs=yaml
+- Work with large files in your Git repo - https://learn.microsoft.com/en-us/azure/devops/repos/git/manage-large-files?view=azure-devops
+- Git lfs - https://www.atlassian.com/git/tutorials/git-lfs
+- Manage security in Azure Pipelines - https://learn.microsoft.com/en-us/azure/devops/pipelines/policies/permissions?view=azure-devops
+- Default processes and process templates - https://learn.microsoft.com/en-us/azure/devops/boards/work-items/guidance/choose-process?view=azure-devops&tabs=agile-process
+- SAFe® concepts and Azure Boards mapping - https://learn.microsoft.com/en-us/azure/devops/boards/plans/safe-configure-boards?view=azure-devops&tabs=agile-process#safe-concepts
+- Check out multiple repositories in your pipeline - https://learn.microsoft.com/en-us/azure/devops/pipelines/repos/multi-repo-checkout?view=azure-devops
+- How Microsoft plans with DevOps - https://learn.microsoft.com/en-us/devops/plan/how-microsoft-plans-devops
+- Unit testing C# with NUnit and .NET Core - https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-csharp-with-nunit
+- Use Azure Key Vault to pass secure parameter value during deployment - https://learn.microsoft.com/en-us/azure/azure-resource-manager/templates/key-vault-parameter?tabs=azure-cli
+- Leases - https://learn.microsoft.com/en-us/rest/api/azure/devops/build/leases?view=azure-devops-rest-6.0
+- Set Git repository permissions - https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops
+- Azure Pipelines agents - https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/agents?view=azure-devops&tabs=yaml%2Cbrowser
+- Get started with Maven packages in Azure Artifacts - https://learn.microsoft.com/en-us/azure/devops/artifacts/get-started-maven?view=azure-devops
+- UI testing considerations - https://learn.microsoft.com/en-us/azure/devops/pipelines/test/ui-testing-considerations?view=azure-devops&tabs=mstest
+- Azure SQL database deployment - https://learn.microsoft.com/en-us/azure/devops/pipelines/targets/azure-sqldb?view=azure-devops&tabs=yaml%2Carm%2Cextract
+- Use Git tags - https://learn.microsoft.com/en-us/azure/devops/repos/git/git-tags?view=azure-devops&tabs=browser
