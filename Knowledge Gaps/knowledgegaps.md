@@ -1,10 +1,4 @@
 # Knowledge gaps
-- Azure Artifacts documentation - https://learn.microsoft.com/en-us/azure/devops/artifacts/?view=azure-devops
-- Azure Boards documentation - https://learn.microsoft.com/en-us/azure/devops/boards/?view=azure-devops
-- Azure Pipelines documentation - https://learn.microsoft.com/en-us/azure/devops/pipelines/?view=azure-devops
-- Azure Repos documentation - https://learn.microsoft.com/en-us/azure/devops/repos/?view=azure-devops
-- Azure Automation documentation - https://learn.microsoft.com/en-us/azure/automation/
-
 - Git Scalar - https://devblogs.microsoft.com/devops/introducing-scalar/
 - Manage wiki and collaboration tool permissions - https://learn.microsoft.com/en-us/azure/devops/project/wiki/manage-readme-wiki-permissions?view=azure-devops
 - Differences Between: Git Revert, checkout, reset & switch commands - https://stackoverflow.com/questions/58003030/what-is-git-restore-and-how-is-it-different-from-git-reset
