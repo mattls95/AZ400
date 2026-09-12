@@ -28,3 +28,4 @@
 - UI testing considerations - https://learn.microsoft.com/en-us/azure/devops/pipelines/test/ui-testing-considerations?view=azure-devops&tabs=mstest
 - Azure SQL database deployment - https://learn.microsoft.com/en-us/azure/devops/pipelines/targets/azure-sqldb?view=azure-devops&tabs=yaml%2Carm%2Cextract
 - Use Git tags - https://learn.microsoft.com/en-us/azure/devops/repos/git/git-tags?view=azure-devops&tabs=browser
+- Remove a large binary from your Git history to manage the size of cloned repositories - https://learn.microsoft.com/en-us/azure/devops/repos/git/remove-binaries?view=azure-devops
