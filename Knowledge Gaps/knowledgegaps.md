@@ -25,3 +25,4 @@
 - Remove a large binary from your Git history to manage the size of cloned repositories - https://learn.microsoft.com/en-us/azure/devops/repos/git/remove-binaries?view=azure-devops
 - Design a Log Analytics workspace architecture - https://learn.microsoft.com/en-us/azure/azure-monitor/logs/workspace-design
 - Sampling in Azure Monitor Application Insights with OpenTelemetry - https://learn.microsoft.com/en-us/azure/azure-monitor/app/opentelemetry-sampling
+- Use Markdown in Azure DevOps - https://learn.microsoft.com/en-us/azure/devops/project/wiki/markdown-guidance?view=azure-devops#wiki-markdown-guidance
