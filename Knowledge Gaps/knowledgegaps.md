@@ -26,3 +26,6 @@
 - Design a Log Analytics workspace architecture - https://learn.microsoft.com/en-us/azure/azure-monitor/logs/workspace-design
 - Sampling in Azure Monitor Application Insights with OpenTelemetry - https://learn.microsoft.com/en-us/azure/azure-monitor/app/opentelemetry-sampling
 - Use Markdown in Azure DevOps - https://learn.microsoft.com/en-us/azure/devops/project/wiki/markdown-guidance?view=azure-devops#wiki-markdown-guidance
+- Default permissions quick reference - https://learn.microsoft.com/en-us/azure/devops/organizations/security/permissions-access?view=azure-devops
+- Notifications - https://learn.microsoft.com/en-us/azure/devops/organizations/security/permissions-access?view=azure-devops
+- Authenticating to GitHub in GitHub Desktop - https://docs.github.com/en/desktop/installing-and-authenticating-to-github-desktop/authenticating-to-github-in-github-desktop
